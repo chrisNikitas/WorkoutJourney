@@ -1,62 +1,48 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  SafeAreaView,
-  Button,
-} from "react-native";
+import { DataTable } from "react-native-paper";
+import { KeyboardAvoidingView } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { FontAwesome5 } from "@expo/vector-icons";
+
+import WorkoutScreen from "./screens/WorkoutScreen";
+import HistoryScreen from "./screens/HistoryScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [Weight, onChangeWeight] = useState("Useless Text");
-  const [Reps, onChangeReps] = useState("");
-  const [ExerciseSets, onChangeExerciseSets] = useState([]);
-
-  function addSet() {
-    console.log("Adding Set");
-    onChangeExerciseSets((currentExerciseSets) => [
-      ...currentExerciseSets,
-      [Weight, Reps],
-    ]);
-    console.log(ExerciseSets);
-  }
-
   return (
-    <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeWeight}
-        placeholder="Weight"
-        value={Weight}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeReps}
-        value={Reps}
-        placeholder="Repetitions"
-        keyboardType="numeric"
-      />
-      <Button title="Add" onPress={addSet} />
-      <View>
-        {ExerciseSets.map((set) => (
-          <Text>{set}</Text>
-        ))}
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName="Workout"
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === "Workout") {
+              iconName = "dumbbell";
+            } else if (route.name === "History") {
+              iconName = "history";
+            } else if (route.name === "Profile") {
+              iconName = "user";
+            }
+
+            // You can return any component that you like here!
+            // return <Ionicons name={iconName} size={size} color={color} />;
+            return <FontAwesome5 name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray",
+        })}
+      >
+        <Tab.Screen name="Profile" component={ProfileScreen}></Tab.Screen>
+        <Tab.Screen name="Workout" component={WorkoutScreen}></Tab.Screen>
+        <Tab.Screen name="History" component={HistoryScreen}></Tab.Screen>
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    flex: 1,
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-});
