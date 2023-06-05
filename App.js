@@ -5,14 +5,40 @@ import { KeyboardAvoidingView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { FontAwesome5 } from "@expo/vector-icons";
 
-import WorkoutScreen from "./screens/WorkoutScreen";
+import WorkoutScreen from "./screens/StartWorkoutScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
-const Stack = createNativeStackNavigator();
+import FactorsScreen from "./StackWorkoutScreen/FactorsScreen";
+import NewWorkoutScreen from "./StackWorkoutScreen/NewWorkoutScreen";
+
+const WorkoutScreenStackNav = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+function WorkoutScreenStack() {
+  return (
+    <WorkoutScreenStackNav.Navigator initialRouteName="StartWorkout">
+      <WorkoutScreenStackNav.Screen
+        name="StartWorkout"
+        component={WorkoutScreen}
+        options={{ headerShown: false }}
+      />
+      <WorkoutScreenStackNav.Screen
+        name="Factors"
+        component={FactorsScreen}
+        options={{ headerShown: true }}
+      />
+      <WorkoutScreenStackNav.Screen
+        name="NewWorkout"
+        component={NewWorkoutScreen}
+        options={{ headerShown: true }}
+      />
+    </WorkoutScreenStackNav.Navigator>
+  );
+}
 
 export default function App() {
   return (
@@ -40,7 +66,7 @@ export default function App() {
         })}
       >
         <Tab.Screen name="Profile" component={ProfileScreen}></Tab.Screen>
-        <Tab.Screen name="Workout" component={WorkoutScreen}></Tab.Screen>
+        <Tab.Screen name="Workout" component={WorkoutScreenStack}></Tab.Screen>
         <Tab.Screen name="History" component={HistoryScreen}></Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>

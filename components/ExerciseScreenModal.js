@@ -1,7 +1,7 @@
 import { View, Modal, FlatList, StyleSheet, Button } from "react-native";
 import { SearchBar } from "@rneui/themed";
 import { useState } from "react";
-import allExerciseList from "../exercises/exercises2.json";
+import allExerciseList from "../exercise_list/exercises.json";
 import ExerciseItem from "../components/ExerciseItem";
 
 const ExerciseScreen = (props) => {
@@ -55,10 +55,6 @@ const ExerciseScreen = (props) => {
 
 const styles = StyleSheet.create({
   text: { margin: 6, fontSize: 16, fontWeight: "bold", textAlign: "center" },
-  appContainer: {
-    paddingTop: 0,
-    flex: 1,
-  },
   modal: { flex: 1, alignItems: "stretch" },
 });
 

@@ -9,19 +9,17 @@ export default function ExerciseTable(props) {
   const [ExerciseSets, onChangeExerciseSets] = useState([]);
 
   function addSet() {
-    console.log("Adding Set");
     if (Weight != "" && Reps != "") {
-      onChangeExerciseSets((currentExerciseSets) => [
-        ...currentExerciseSets,
-        [Weight, Reps],
-      ]);
+      onChangeExerciseSets([...ExerciseSets, [Weight, Reps]]);
     }
-    console.log(ExerciseSets);
+    console.log("Adding Set: ", ExerciseSets);
+    props.addSet(props.exercise_name, [Weight, Reps], props.tableIdx);
   }
+
   return (
     <DataTable style={{ padding: 15, backgroundColor: "#DCDCDC" }}>
       <View style={styles.content}>
-        <Text style={{ fontSize: 20, flex: 1 }}>{props.exercise_name}</Text>
+        <Text style={{ fontSize: 20, flex: 1 }}>{props.exerciseName}</Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ alignItems: "flex-start", margin: 12 }}>
             <Text>Weight</Text>
@@ -52,7 +50,6 @@ export default function ExerciseTable(props) {
               iconStyle={{ marginRight: 0 }}
               onPress={addSet}
             ></FontAwesome5.Button>
-            {/* <Button title="+" onPress={addSet} /> */}
           </View>
         </View>
       </View>
