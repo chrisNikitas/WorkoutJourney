@@ -1,40 +1,32 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Button,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import { useState } from "react";
 import { DataTable } from "react-native-paper";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function ExerciseTable(props) {
-  const [Weight, onChangeWeight] = useState("");
-  const [Reps, onChangeReps] = useState("");
-  const [ExerciseSets, onChangeExerciseSets] = useState([]);
+  const [Weight, setWeight] = useState("");
+  const [Reps, setReps] = useState("");
+  const [ExerciseSets, setExerciseSets] = useState([]);
 
   function addSet() {
-    console.log("Adding Set");
     if (Weight != "" && Reps != "") {
-      onChangeExerciseSets((currentExerciseSets) => [
-        ...currentExerciseSets,
-        [Weight, Reps],
-      ]);
+      setExerciseSets([...ExerciseSets, [Weight, Reps]]);
     }
-    console.log(ExerciseSets);
+    console.log("Adding Set To Table: ", [Weight, Reps]);
+    props.addSet(props.exercise_name, [Weight, Reps], props.tableIdx);
   }
+
   return (
     <DataTable style={{ padding: 15, backgroundColor: "#DCDCDC" }}>
       <View style={styles.content}>
-        <Text style={{ fontSize: 20, flex: 1 }}>{props.exercise_name}</Text>
+        <Text style={{ fontSize: 20, flex: 1 }}>{props.exerciseName}</Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <View style={{ alignItems: "flex-start", margin: 12 }}>
             <Text>Weight</Text>
             <TextInput
               style={styles.input}
               placeholder="Kg"
-              onChangeText={onChangeWeight}
+              onChangeText={setWeight}
               value={Weight}
               keyboardType="numeric"
               maxLength={4}
@@ -44,16 +36,21 @@ export default function ExerciseTable(props) {
             <Text>Reps</Text>
             <TextInput
               style={styles.input}
-              onChangeText={onChangeReps}
+              onChangeText={setReps}
               value={Reps}
               placeholder="Reps"
               keyboardType="numeric"
               maxLength={4}
             />
           </View>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <Button title="+" onPress={addSet} />
+          <View style={{ alignItems: "center" }}>
+            <Text></Text>
+            <FontAwesome5.Button
+              name={"plus"}
+              iconStyle={{ marginRight: 0 }}
+              onPress={addSet}
+            ></FontAwesome5.Button>
+          </View>
         </View>
       </View>
       <DataTable.Header

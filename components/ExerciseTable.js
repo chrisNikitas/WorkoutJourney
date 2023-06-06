@@ -1,82 +1,98 @@
-import { StyleSheet, Text, View, Button, TextInput } from "react-native";
-import { useState } from "react";
+import { StyleSheet, Text, View, TextInput } from "react-native";
+import { useState, useContext } from "react";
 import { DataTable } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { WorkoutDataContext } from "../store/WorkoutData.js";
 
 export default function ExerciseTable(props) {
-  const [Weight, onChangeWeight] = useState("");
-  const [Reps, onChangeReps] = useState("");
-  const [ExerciseSets, onChangeExerciseSets] = useState([]);
+  const [weight, setWeight] = useState("");
+  const [reps, setReps] = useState("");
 
-  function addSet() {
-    if (Weight != "" && Reps != "") {
-      onChangeExerciseSets([...ExerciseSets, [Weight, Reps]]);
+  const workoutDataContext = useContext(WorkoutDataContext);
+
+  const addSet = () => {
+    if (weight !== "" && reps !== "") {
+      workoutDataContext.addSet(
+        props.exerciseName,
+        [weight, reps],
+        props.tableIdx
+      );
     }
-    console.log("Adding Set: ", ExerciseSets);
-    props.addSet(props.exercise_name, [Weight, Reps], props.tableIdx);
-  }
+  };
 
   return (
-    <DataTable style={{ padding: 15, backgroundColor: "#DCDCDC" }}>
+    <DataTable style={styles.container}>
       <View style={styles.content}>
-        <Text style={{ fontSize: 20, flex: 1 }}>{props.exerciseName}</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={{ alignItems: "flex-start", margin: 12 }}>
+        <Text style={styles.title}>{props.exerciseName}</Text>
+        <View style={styles.inputContainer}>
+          <View style={styles.inputWrapper}>
             <Text>Weight</Text>
             <TextInput
               style={styles.input}
               placeholder="Kg"
-              onChangeText={onChangeWeight}
-              value={Weight}
+              onChangeText={setWeight}
+              value={weight}
               keyboardType="numeric"
               maxLength={4}
             />
           </View>
-          <View style={{ alignItems: "flex-start", margin: 12 }}>
+          <View style={styles.inputWrapper}>
             <Text>Reps</Text>
             <TextInput
               style={styles.input}
-              onChangeText={onChangeReps}
-              value={Reps}
+              onChangeText={setReps}
+              value={reps}
               placeholder="Reps"
               keyboardType="numeric"
               maxLength={4}
             />
           </View>
-          <View style={{ alignItems: "center" }}>
-            <Text></Text>
+          <View style={styles.plusButton}>
             <FontAwesome5.Button
               name={"plus"}
-              iconStyle={{ marginRight: 0 }}
+              iconStyle={styles.plusIcon}
               onPress={addSet}
-            ></FontAwesome5.Button>
+            />
           </View>
         </View>
       </View>
-      <DataTable.Header
-        style={{ backgroundColor: "#DCDCDC", borderBottomColor: "darkgray" }}
-      >
-        <DataTable.Title style={{ flex: 2 }}>Set</DataTable.Title>
-        <DataTable.Title style={{ flex: 1 }}>Weight</DataTable.Title>
-        <DataTable.Title style={{ flex: 1 }}>Rep</DataTable.Title>
+      <DataTable.Header style={styles.header}>
+        <DataTable.Title style={styles.headerTitle}>Set</DataTable.Title>
+        <DataTable.Title style={styles.headerTitle}>Weight</DataTable.Title>
+        <DataTable.Title style={styles.headerTitle}>Rep</DataTable.Title>
       </DataTable.Header>
-      {ExerciseSets.map((set, i) => (
-        <DataTable.Row key={i} style={{ borderBottomColor: "grey" }}>
-          <DataTable.Cell style={{ flex: 2 }}>{i}</DataTable.Cell>
-          <DataTable.Cell style={{ flex: 1 }}>{set[0]}</DataTable.Cell>
-          <DataTable.Cell style={{ flex: 1 }}>{set[1]}</DataTable.Cell>
+      {workoutDataContext.workoutData[props.tableIdx]["sets"].map((set, i) => (
+        <DataTable.Row key={i} style={styles.row}>
+          <DataTable.Cell style={styles.cell}>{i}</DataTable.Cell>
+          <DataTable.Cell style={styles.cell}>{set[0]}</DataTable.Cell>
+          <DataTable.Cell style={styles.cell}>{set[1]}</DataTable.Cell>
         </DataTable.Row>
-        // <Text key={i}>{ + " " + set[1]}</Text>
       ))}
     </DataTable>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 15,
+    backgroundColor: "#DCDCDC",
+  },
   content: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  title: {
+    fontSize: 20,
+    flex: 1,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  inputWrapper: {
+    alignItems: "flex-start",
+    margin: 12,
   },
   input: {
     height: 40,
@@ -85,5 +101,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
+  },
+  plusButton: {
+    alignItems: "center",
   },
 });

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "coffee",
+    "type": "bool",
+    "desc": "Add this factor if you've had coffee up to two hours before your workout"
+  },
+  {
+    "name": "sleep",
+    "type": "1-5",
+    "desc": "Rate how you feel like you slept on a 1-5 scale (1 being slept badly and 5 being slept great)"
+  },
+  {
+    "name": "stress",
+    "type": "1-5",
+    "desc": "Rate how stressed you feel right now (1 being no stress/relaxed and 5 being very stressed)"
+  },
+  {
+    "name": "stress",
+    "type": "1-5",
+    "desc": "Rate how stressed you feel right now (1 being no stress/relaxed and 5 being very stressed)"
+  },
+  {
+    "name": "stress",
+    "type": "1-5",
+    "desc": "Rate how stressed you feel right now (1 being no stress/relaxed and 5 being very stressed)"
+  }
+]

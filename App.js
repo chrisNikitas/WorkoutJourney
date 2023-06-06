@@ -12,31 +12,35 @@ import WorkoutScreen from "./screens/StartWorkoutScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
-import FactorsScreen from "./StackWorkoutScreen/FactorsScreen";
-import NewWorkoutScreen from "./StackWorkoutScreen/NewWorkoutScreen";
+import FactorsScreen from "./screens/stackWorkoutScreen/FactorsScreen";
+import NewWorkoutScreen from "./screens/stackWorkoutScreen/NewWorkoutScreen";
+
+import WorkoutDataProvider from "./store/WorkoutData.js";
 
 const WorkoutScreenStackNav = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function WorkoutScreenStack() {
   return (
-    <WorkoutScreenStackNav.Navigator initialRouteName="StartWorkout">
-      <WorkoutScreenStackNav.Screen
-        name="StartWorkout"
-        component={WorkoutScreen}
-        options={{ headerShown: false }}
-      />
-      <WorkoutScreenStackNav.Screen
-        name="Factors"
-        component={FactorsScreen}
-        options={{ headerShown: true }}
-      />
-      <WorkoutScreenStackNav.Screen
-        name="NewWorkout"
-        component={NewWorkoutScreen}
-        options={{ headerShown: true }}
-      />
-    </WorkoutScreenStackNav.Navigator>
+    <WorkoutDataProvider>
+      <WorkoutScreenStackNav.Navigator initialRouteName="StartWorkout">
+        <WorkoutScreenStackNav.Screen
+          name="StartWorkout"
+          component={WorkoutScreen}
+          options={{ headerShown: false }}
+        />
+        <WorkoutScreenStackNav.Screen
+          name="Factors"
+          component={FactorsScreen}
+          options={{ headerShown: true }}
+        />
+        <WorkoutScreenStackNav.Screen
+          name="NewWorkout"
+          component={NewWorkoutScreen}
+          options={{ headerShown: true }}
+        />
+      </WorkoutScreenStackNav.Navigator>
+    </WorkoutDataProvider>
   );
 }
 
