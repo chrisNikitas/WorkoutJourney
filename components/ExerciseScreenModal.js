@@ -4,12 +4,12 @@ import { useState } from "react";
 import allExerciseList from "../exercise_list/exercises.json";
 import ExerciseItem from "../components/ExerciseItem";
 
-const ExerciseScreen = (props) => {
+const ExerciseScreen = ({ isVisible, onSelect, onCancel }) => {
   const [search, setSearch] = useState("");
   const [exerciseList, setExerciseList] = useState(allExerciseList);
 
   function addExercise(exercise) {
-    props.addExercise(exercise);
+    onSelect(exercise);
   }
 
   function renderExerciseItem(itemData) {
@@ -32,7 +32,7 @@ const ExerciseScreen = (props) => {
   }
 
   return (
-    <Modal visible={props.isVisible} animationType="slide">
+    <Modal visible={isVisible} animationType="slide">
       <View style={styles.modal}>
         <SearchBar
           inputContainerStyle={{ backgroundColor: "lightgray" }}
@@ -41,8 +41,8 @@ const ExerciseScreen = (props) => {
           placeholder="Enter Exercise"
           value={search}
           onChangeText={searchExercises}
-        ></SearchBar>
-        <Button title="Cancel" onPress={props.onCancel}></Button>
+        />
+        <Button title="Cancel" onPress={onCancel}></Button>
 
         <FlatList
           data={exerciseList}

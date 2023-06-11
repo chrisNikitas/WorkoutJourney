@@ -34,7 +34,7 @@ export default function WorkoutScreen({ navigation }) {
       <Button title="Add Exercise" onPress={toggleExerciseScreenModal}></Button>
 
       <ExerciseScreen
-        addExercise={addExercise}
+        onSelect={addExercise}
         isVisible={exerciseScreenModalIsVisible}
         onCancel={toggleExerciseScreenModal}
       ></ExerciseScreen>
