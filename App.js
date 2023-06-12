@@ -6,29 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import firebase from "@react-native-firebase/app";
 
-// Your secondary Firebase project credentials...
-const credentials = {
-  clientId: "",
-  appId: "",
-  apiKey: "",
-  databaseURL: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  projectId: "",
-};
-
-const config = {
-  name: "SECONDARY_APP",
-};
-
-await firebase.initializeApp(credentials, config);
-const apps = firebase.apps;
-
-apps.forEach((app) => {
-  console.log("App name: ", app.name);
-});
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import WorkoutScreen from "./screens/StartWorkoutScreen";
