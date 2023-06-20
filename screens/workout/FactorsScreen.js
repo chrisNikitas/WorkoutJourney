@@ -1,10 +1,11 @@
-import { View, StyleSheet, Button, Pressable, FlatList } from "react-native";
-import allFactors from "../../../data/FactorsList.json";
-import { useState, useRef } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import IconSelectionModal from "./Icons";
-import FactorModal from "./FactorModal";
-import NewFactorModal from "./NewFactorModal";
+import { useState, useContext } from "react";
+import { Button, FlatList, Pressable, StyleSheet, View } from "react-native";
+import IconSelectionModal from "../../components/global/IconsModal";
+import FactorModal from "../../components/workout/FactorModal";
+import NewFactorModal from "../../components/workout/NewFactorModal";
+import allFactors from "../../data/FactorsList.json";
+import { WorkoutDataContext } from "../../store/WorkoutData.js";
 
 const FactorsScreen = ({ navigation }) => {
   const [factorModalIsVisible, setFactorModalIsVisible] = useState(false);
@@ -14,6 +15,8 @@ const FactorsScreen = ({ navigation }) => {
     name: "",
     type: "",
   });
+  const [factors, setFactors] = useState([]);
+  const workoutDataContext = useContext(WorkoutDataContext);
 
   function onPressNext() {
     navigation.navigate("NewWorkout");
@@ -31,19 +34,37 @@ const FactorsScreen = ({ navigation }) => {
   }
 
   const addFactorData = (factorVal = -1) => {
+    // newFactor
     if (selectedFactor["type"] == "1-5") {
-      setSelectedFactor({
+      newFactor = {
         ...selectedFactor,
         value: factorVal,
-      });
+      };
     } else if (selectedFactor["type"] == "bool") {
-      setSelectedFactor({
+      newFactor = {
         ...selectedFactor,
         value: "true",
-      });
+      };
     }
+    setSelectedFactor(newFactor);
+
+    // add to factors, but remove if it already exists
+    newFactors = [...factors];
+    newFactors = newFactors.filter((el) => {
+      console.log("EL ", el);
+      console.log("NF ", newFactor);
+      return el["name"] != newFactor["name"];
+    });
+    console.log("newFactors", newFactors);
+    newFactors = [
+      ...newFactors,
+      { name: newFactor["name"], value: newFactor["value"] },
+    ];
+    setFactors(newFactors);
+
+    workoutDataContext.addFactors(newFactors);
     setFactorModalIsVisible(false);
-    console.log(selectedFactor);
+    // console.log(factors);
   };
 
   function renderFactor(itemData) {
@@ -95,7 +116,8 @@ const FactorsScreen = ({ navigation }) => {
         <Button
           title="Log"
           onPress={() => {
-            console.log(selectedFactor);
+            console.log("S ", selectedFactor);
+            console.log("A ", factors);
           }}
         ></Button>
         <Button title="Next" onPress={onPressNext}></Button>

@@ -1,10 +1,10 @@
 import { View, Modal, FlatList, StyleSheet, Button } from "react-native";
 import { SearchBar } from "@rneui/themed";
 import { useState } from "react";
-import allExerciseList from "../exercise_list/exercises.json";
-import ExerciseItem from "../components/ExerciseItem";
+import allExerciseList from "../../exercise_list/new_exercises.json";
+import ExerciseItem from "../workout/ExerciseItem";
 
-const ExerciseScreen = ({ isVisible, onSelect, onCancel }) => {
+const SelectExerciseModal = ({ isVisible, onSelect, onCancel }) => {
   const [search, setSearch] = useState("");
   const [exerciseList, setExerciseList] = useState(allExerciseList);
 
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
   modal: { flex: 1, alignItems: "stretch" },
 });
 
-export default ExerciseScreen;
+export default SelectExerciseModal;

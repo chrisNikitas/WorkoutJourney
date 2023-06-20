@@ -6,17 +6,25 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-
 import { FontAwesome5 } from "@expo/vector-icons";
 
-import WorkoutScreen from "./screens/StartWorkoutScreen";
-import HistoryScreen from "./screens/HistoryScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import WorkoutScreen from "./screens/workout/StartWorkoutScreen";
+import HistoryScreen from "./screens/history/HistoryScreen";
+import ProfileScreen from "./screens/profile/ProfileScreen";
 
-import FactorsScreen from "./screens/stackWorkoutScreen/factorsScreen/FactorsScreen";
-import NewWorkoutScreen from "./screens/stackWorkoutScreen/NewWorkoutScreen";
+import FactorsScreen from "./screens/workout/FactorsScreen";
+import NewWorkoutScreen from "./screens/workout/NewWorkoutScreen";
 
 import WorkoutDataProvider from "./store/WorkoutData.js";
+
+import { firebase } from "@react-native-firebase/database";
+
+const reference = firebase
+  .app()
+  .database(
+    "https://fitness-app-cc6bd-default-rtdb.europe-west1.firebasedatabase.app/"
+  )
+  .ref("/users/123");
 
 const WorkoutScreenStackNav = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,7 +33,7 @@ function WorkoutScreenStack() {
   return (
     <WorkoutDataProvider>
       <WorkoutScreenStackNav.Navigator
-        screenOptions={{ animation: "none", headerShown: true }}
+        screenOptions={{ animation: "slide_from_right", headerShown: true }}
         initialRouteName="StartWorkout"
       >
         <WorkoutScreenStackNav.Screen
@@ -93,12 +101,18 @@ export default function App() {
             tabBarInactiveTintColor: "gray",
           })}
         >
-          <Tab.Screen name="Profile" component={ProfileScreen}></Tab.Screen>
+          <Tab.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={({ route }) => ({
+              title: "Your Goals",
+            })}
+          ></Tab.Screen>
           <Tab.Screen
             name="Workout"
             component={WorkoutScreenStack}
             options={({ route }) => ({
-              title: getHeaderTitle(route),
+              title: "Workout",
               headerShown: false,
             })}
           ></Tab.Screen>

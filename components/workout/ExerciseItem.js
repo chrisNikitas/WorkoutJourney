@@ -17,7 +17,7 @@ export default function ExerciseItem(props) {
           >
             {props.item.name}
           </Text>
-          <Text>{props.item.muscles.map((muscle) => muscle + " ")}</Text>
+          <Text>{props.item.primaryMuscles.map((muscle) => muscle + " ")}</Text>
         </View>
       </View>
     </Pressable>

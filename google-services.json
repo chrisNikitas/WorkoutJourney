@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "975322495846",
+    "firebase_url": "https://fitness-app-cc6bd-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "fitness-app-cc6bd",
+    "storage_bucket": "fitness-app-cc6bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975322495846:android:3ef975115e049b66d126a7",
+        "android_client_info": {
+          "package_name": "com.chrisnik.new_fitness_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975322495846-61ig8vhgemumh8ujopr1nd0mltig7n4b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbED_17zwSk36rJ8m-9zii1LPPAJ_Injc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975322495846-61ig8vhgemumh8ujopr1nd0mltig7n4b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

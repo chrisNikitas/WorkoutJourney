@@ -1,8 +1,8 @@
 import { StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import { Button } from "@rneui/base";
 import { useState, useContext } from "react";
-import ExerciseTable from "../../components/ExerciseTable";
-import ExerciseScreen from "../../components/ExerciseScreenModal";
+import ExerciseTable from "../../components/workout/ExerciseTable";
+import SelectExerciseModal from "../../components/global/SelectExerciseModal";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
 
 export default function WorkoutScreen({ navigation }) {
@@ -20,10 +20,15 @@ export default function WorkoutScreen({ navigation }) {
     workoutDataContext.addExercise(exercise);
   }
 
+  const finishWorkout = () => {
+    workoutDataContext.addWorkout();
+    navigation.navigate("StartWorkout");
+  };
+
   return (
     <SafeAreaView style={styles.appContainer}>
       <ScrollView>
-        {workoutDataContext.workoutData.map((item, idx) => (
+        {workoutDataContext.exerciseData.map((item, idx) => (
           <ExerciseTable
             key={idx}
             tableIdx={idx}
@@ -32,12 +37,13 @@ export default function WorkoutScreen({ navigation }) {
         ))}
       </ScrollView>
       <Button title="Add Exercise" onPress={toggleExerciseScreenModal}></Button>
+      <Button title="Finish" onPress={finishWorkout}></Button>
 
-      <ExerciseScreen
+      <SelectExerciseModal
         onSelect={addExercise}
         isVisible={exerciseScreenModalIsVisible}
         onCancel={toggleExerciseScreenModal}
-      ></ExerciseScreen>
+      ></SelectExerciseModal>
     </SafeAreaView>
   );
 }

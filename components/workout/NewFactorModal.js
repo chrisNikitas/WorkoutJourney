@@ -6,15 +6,17 @@ import {
   Button,
   Pressable,
   Text,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import { useState } from "react";
 
 import DropDownPicker from "react-native-dropdown-picker";
 import { Ionicons } from "@expo/vector-icons";
 
-import CancelButton from "../../../global/CancelButton";
-import IconSelectionModal from "./Icons";
-import allFactors from "../../../data/FactorsList.json";
+import CancelButton from "../global/CancelButton";
+import IconSelectionModal from "../global/IconsModal";
+import allFactors from "../../data/FactorsList.json";
 
 const NewFactorModal = ({ isVisible, setIsVisible }) => {
   const [name, setName] = useState("");
@@ -55,26 +57,47 @@ const NewFactorModal = ({ isVisible, setIsVisible }) => {
   //   txt = icon === "help" ? "Add Icon" : "";
   return (
     <>
-      <Modal style={styles.modalContainer} visible={isVisible}>
+      <Modal
+        style={styles.modalContainer}
+        animationType="slide"
+        visible={isVisible}
+      >
         <View style={styles.mainContent}>
           <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <Text>{icon === "help" ? "Add Icon" : ""}</Text>
-            <Pressable onPress={toggleIcons}>
+            <Pressable
+              onPress={toggleIcons}
+              style={{
+                backgroundColor: icon == "help" ? "lightgrey" : "white",
+                borderRadius: 5,
+              }}
+            >
               <Ionicons name={icon} size={100} />
             </Pressable>
           </View>
           <View style={styles.textContainer}>
             <TextInput
-              style={styles.factorName}
+              style={[
+                styles.factorName,
+                name == "" ? styles.input_empty : styles.input_filled,
+              ]}
               onChangeText={setName}
               value={name}
               placeholder="Name"
               keyboardType="default"
             />
             <TextInput
-              style={styles.factorDesc}
+              style={[
+                styles.factorDesc,
+                desc == "" ? styles.input_empty : styles.input_filled,
+              ]}
+              multiline={true}
               onChangeText={setDesc}
               value={desc}
               placeholder="Description (Optional)"
@@ -82,8 +105,14 @@ const NewFactorModal = ({ isVisible, setIsVisible }) => {
             />
             <DropDownPicker
               placeholder="Select a factor type"
+              showArrowIcon={false}
               containerStyle={styles.factorTypeContainer}
+              dropDownContainerStyle={
+                type == null ? styles.input_empty : styles.input_filled
+              }
               // zIndex={1}
+              style={type == null ? styles.input_empty : styles.input_filled}
+              textStyle={{ textAlign: "center" }}
               open={open}
               value={type}
               items={types}
@@ -92,10 +121,18 @@ const NewFactorModal = ({ isVisible, setIsVisible }) => {
               setItems={setTypes}
             />
           </View>
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Add" onPress={addNewFactor} />
-          <CancelButton callback={closeModal} />
+          <View style={styles.buttonContainer}>
+            <Button
+              disabled={
+                name != null && type != null && desc != null && icon != "help"
+                  ? false
+                  : true
+              }
+              title="Add"
+              onPress={addNewFactor}
+            />
+            <CancelButton callback={closeModal} />
+          </View>
         </View>
       </Modal>
       <IconSelectionModal
@@ -112,21 +149,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContent: {
+    // backgroundColor: "lightgrey",
     paddingTop: 0,
-    flex: 3,
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   textContainer: {
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-    // justifyContent: "space-between",
-  },
-  factorTypeContainer: {
-    // marginVertical: 50,
     width: "90%",
-    alignItems: "center",
+    flex: 1,
+    // flexDirection: "column",
+    // alignItems: "",
+    // justifyContent: "space-between",
   },
   buttonContainer: {
     zIndex: -1,
@@ -141,11 +175,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   factorDesc: {
-    alignItems: "center",
-    width: "80%",
-    padding: 1,
-    // borderWidth: 1,
-    // borderRadius: 2,
+    marginBottom: 10,
+    height: 100,
+  },
+  factorTypeContainer: {
+    // alignItems: "center",
+  },
+  input_empty: {
+    backgroundColor: "lightgrey",
+    textAlign: "center",
+    padding: 8,
+    borderRadius: 5,
+    borderWidth: 0,
+  },
+  input_filled: {
+    backgroundColor: "white",
+    textAlign: "center",
+    padding: 8,
+    borderRadius: 0,
+    borderWidth: 0,
+    borderBottomWidth: 0.4,
   },
 });
 
