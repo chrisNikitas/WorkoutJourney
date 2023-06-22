@@ -21,6 +21,7 @@ export default function WorkoutScreen({ navigation }) {
   }
 
   const finishWorkout = () => {
+    date = new Date();
     workoutDataContext.addWorkout();
     navigation.navigate("StartWorkout");
   };
