@@ -4177,7 +4177,7 @@
     "force": "push",
     "mechanic": "compound",
     "primaryMuscles": ["chest"],
-    "secondaryMuscles": ["shoulders", "triceps"],
+    "secondaryMuscles": ["shoulders", "triceps", "abdominals"],
     "category": "strength"
   },
   {
@@ -4371,7 +4371,7 @@
     "force": "push",
     "mechanic": "compound",
     "primaryMuscles": ["chest"],
-    "secondaryMuscles": ["shoulders", "triceps"],
+    "secondaryMuscles": ["shoulders", "triceps", "abdominals"],
     "category": "strength"
   },
   {
@@ -4379,7 +4379,7 @@
     "force": "push",
     "mechanic": "compound",
     "primaryMuscles": ["chest"],
-    "secondaryMuscles": ["shoulders", "triceps"],
+    "secondaryMuscles": ["shoulders", "triceps", "abdominals"],
     "category": "strength"
   },
   {

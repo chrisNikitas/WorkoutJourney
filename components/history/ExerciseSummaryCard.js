@@ -11,11 +11,11 @@ const ExerciseSummaryCard = ({ workoutData }) => {
           {new Date(workoutData.timeData.startTime).toLocaleTimeString()}
         </Text>
       </View>
-      {workoutData.exerciseData.map((el) => (
-        <View>
+      {workoutData.exerciseData.map((el, edIndex) => (
+        <View key={edIndex}>
           <Text style={styles.exerciseName}>{el.exerciseName + " "}</Text>
-          {el.sets.map((set) => {
-            return <Text>{set[0] + "kg " + set[1] + " "}</Text>;
+          {el.sets.map((set, setIndex) => {
+            return <Text key={setIndex}>{set[0] + "kg " + set[1] + " "}</Text>;
           })}
           {/* <Text>{el.sets.map((set) => set[0] + "kg " + set[1] + " ")}</Text> */}
         </View>

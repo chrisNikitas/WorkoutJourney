@@ -37,7 +37,7 @@ const GoalItem = ({ goal, removeGoal }) => {
         <View style={styles.container}>
           <View style={styles.name_cont}>
             {/* <Text></Text> */}
-            <Text style={styles.name_text}>{goal.exercise}</Text>
+            <Text style={styles.name_text}>{goal.exercise.name}</Text>
           </View>
           <View
             adjustsFontSizeToFit={true}

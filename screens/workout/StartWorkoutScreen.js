@@ -21,6 +21,10 @@ export default function WorkoutScreen({ navigation }) {
     workoutDataContext.setStartTime(date);
   }
 
+  const addDummyWorkout = () => {
+    workoutDataContext.addDummyWorkout();
+  };
+
   return (
     <SafeAreaView style={styles.appContainer}>
       <View style={styles.woCounterContainer}>
@@ -31,6 +35,7 @@ export default function WorkoutScreen({ navigation }) {
         </Text>
       </View>
       <Button title="Start Workout" onPress={onStartWorkout}></Button>
+      <Button title="Add Dummy Workout" onPress={addDummyWorkout}></Button>
     </SafeAreaView>
   );
 }
@@ -45,5 +50,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
   },
-  woCounter: { fontSize: 60 },
+  woCounter: { fontSize: 60, color: "tomato" },
 });

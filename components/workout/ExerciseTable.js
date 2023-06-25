@@ -136,6 +136,7 @@ export default function ExerciseTable(props) {
             <Pressable
               style={{ flex: 1 }}
               onPress={() => removeSetButton(props.tableIdx, i)}
+              hitSlop={5}
             >
               <Ionicons name="remove-circle" color={"grey"} />
             </Pressable>

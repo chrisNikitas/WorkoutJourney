@@ -46,7 +46,7 @@ export default function ProfileScreen() {
 
   const onExerciseSelect = (exercise) => {
     setExerciseScreenModalIsVisible(false);
-    setGoalExercise(exercise.name);
+    setGoalExercise(exercise);
   };
 
   const addGoal = () => {
@@ -102,7 +102,7 @@ export default function ProfileScreen() {
                   textTransform: "capitalize",
                 }}
               >
-                {goalExercise == null ? "Select Exercise" : goalExercise}
+                {goalExercise == null ? "Select Exercise" : goalExercise.name}
               </Text>
             </Pressable>
             <View style={styles.input}>

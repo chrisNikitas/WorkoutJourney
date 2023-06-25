@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext } from "react";
+import uuid from "react-native-uuid";
 import * as LocalStore from "../store/LocalStore";
 
 export const WorkoutDataContext = createContext(null);
@@ -18,6 +19,86 @@ export default function WorkoutDataProvider({ children }) {
     });
   }, []);
 
+  const addDummyWorkout = () => {
+    let now = Date.now();
+    let startTime = new Date(now - 1 * 60000);
+    console.log("Here");
+    let endTime = new Date();
+
+    workoutData = {
+      key: uuid.v4(),
+      exerciseData: [
+        {
+          exercise: {
+            name: "Pullups",
+            force: "pull",
+            mechanic: "compound",
+            primaryMuscles: ["lats"],
+            secondaryMuscles: ["biceps", "middle back"],
+            category: "strength",
+          },
+
+          exerciseName: "Pullups",
+          sets: [
+            [2, 4],
+            [2, 5],
+            [2, 5],
+            [2, 5],
+            [2, 5],
+          ],
+          volume: 48,
+        },
+        {
+          exerciseName: "Pushups",
+          exercise: {
+            name: "Pushups",
+            force: "push",
+            mechanic: "compound",
+            primaryMuscles: ["chest"],
+            secondaryMuscles: ["shoulders", "triceps"],
+            category: "strength",
+          },
+          sets: [
+            [10, 10],
+            [10, 10],
+            [10, 10],
+          ],
+          volume: 300,
+        },
+
+        {
+          exercise: {
+            name: "Advanced Kettlebell Windmill",
+            force: "push",
+            mechanic: "isolation",
+            primaryMuscles: ["abdominals"],
+            secondaryMuscles: ["glutes", "hamstrings", "shoulders"],
+            category: "strength",
+          },
+          exerciseName: "Advanced Kettlebell Windmill",
+          sets: [
+            [10, 20],
+            [10, 20],
+            [10, 20],
+            [10, 20],
+          ],
+          volume: 800,
+        },
+      ],
+      factorData: [],
+      timeData: {
+        endTime: endTime,
+        startTime: startTime,
+      },
+    };
+
+    newAllWorkouts = [...allWorkouts, workoutData];
+    setAllWorkouts(newAllWorkouts);
+    console.log("AllWorkouts", newAllWorkouts);
+    LocalStore.storeData("AllWorkouts", newAllWorkouts);
+    clearWorkout();
+  };
+
   const clearWorkout = () => {
     setExerciseData([]);
     setFactorData([]);
@@ -31,7 +112,12 @@ export default function WorkoutDataProvider({ children }) {
 
     let endTime = new Date();
     newTimeData = { ...timeData, endTime: endTime };
-    workoutData = { exerciseData, factorData, timeData: newTimeData };
+    workoutData = {
+      key: uuid.v4(),
+      exerciseData,
+      factorData,
+      timeData: newTimeData,
+    };
 
     newAllWorkouts = [...allWorkouts, workoutData];
     setAllWorkouts(newAllWorkouts);
@@ -47,6 +133,7 @@ export default function WorkoutDataProvider({ children }) {
 
     LocalStore.storeData("AllWorkouts", newAllWorkouts);
     clearWorkout();
+    console.log(workoutData);
   };
 
   function addFactors(factors) {
@@ -57,7 +144,7 @@ export default function WorkoutDataProvider({ children }) {
   function addExercise(exercise) {
     newExerciseData = (currentExerciseData) => [
       ...currentExerciseData,
-      { exerciseName: exercise.name, sets: [] },
+      { exercise: exercise, exerciseName: exercise.name, sets: [] },
     ];
     setExerciseData(newExerciseData);
     // console.log("Adding Exercise From Context... yay");
@@ -141,6 +228,20 @@ export default function WorkoutDataProvider({ children }) {
       return allWorkouts;
     }
   };
+
+  const removeAllData = () => {
+    console.log("Removing");
+    LocalStore.storeData("AllWorkouts", []);
+  };
+
+  const removeWorkout = (key) => {
+    newAllWorkouts = allWorkouts.filter((wo) => wo.key !== key);
+    console.log("Old Workouts ", allWorkouts.length);
+    console.log("New Workouts ", newAllWorkouts.length);
+    setAllWorkouts(newAllWorkouts);
+    LocalStore.storeData("AllWorkouts", newAllWorkouts);
+  };
+
   const value = {
     allWorkouts: allWorkouts,
     exerciseData: exerciseData,
@@ -153,6 +254,9 @@ export default function WorkoutDataProvider({ children }) {
     setStartTime: setStartTime,
     setEndTime: setEndTime,
     getAllWorkouts: getAllWorkouts,
+    removeAllData: removeAllData,
+    removeWorkout: removeWorkout,
+    addDummyWorkout: addDummyWorkout,
   };
 
   return (

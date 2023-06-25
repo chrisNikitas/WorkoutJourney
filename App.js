@@ -29,7 +29,7 @@ const reference = firebase
   .ref("/users/123");
 
 const WorkoutScreenStackNav = createNativeStackNavigator();
-const HistoryTab = createMaterialTopTabNavigator();
+const HistoryTab = createBottomTabNavigator();
 const Tab = createBottomTabNavigator();
 
 function WorkoutScreenStack() {
@@ -61,7 +61,7 @@ function HistoryScreenTab() {
   return (
     <HistoryTab.Navigator
       screenOptions={{ headerShown: true }}
-      initialRouteName="PrevWorkouts"
+      initialRouteName="GoalSpecific"
     >
       <HistoryTab.Screen
         name="PrevWorkouts"
@@ -102,7 +102,7 @@ export default function App() {
         <StatusBar style="auto" />
         <NavigationContainer>
           <Tab.Navigator
-            initialRouteName="Workout"
+            initialRouteName="History"
             screenOptions={({ route }) => ({
               tabBarIcon: ({ focused, color, size }) => {
                 let iconName;
