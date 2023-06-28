@@ -1,9 +1,10 @@
-import { StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import { StyleSheet, SafeAreaView, ScrollView, FlatList } from "react-native";
 import { Button } from "@rneui/base";
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import ExerciseTable from "../../components/workout/ExerciseTable";
 import SelectExerciseModal from "../../components/global/SelectExerciseModal";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
+import MyButton from "../../components/global/MyButton";
 
 export default function WorkoutScreen({ navigation }) {
   const [exerciseScreenModalIsVisible, setExerciseScreenModalIsVisible] =
@@ -28,23 +29,54 @@ export default function WorkoutScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.appContainer}>
-      <ScrollView>
-        {workoutDataContext.exerciseData.map((item, idx) => (
-          <ExerciseTable
-            key={idx}
-            tableIdx={idx}
-            exerciseName={item.exerciseName}
-          ></ExerciseTable>
-        ))}
-      </ScrollView>
-      <Button title="Add Exercise" onPress={toggleExerciseScreenModal}></Button>
-      <Button title="Finish" onPress={finishWorkout}></Button>
-
       <SelectExerciseModal
         onSelect={addExercise}
         isVisible={exerciseScreenModalIsVisible}
         onCancel={toggleExerciseScreenModal}
       ></SelectExerciseModal>
+      {/* <FlatList
+        data={workoutDataContext.exerciseData}
+        renderItem={(itemData) => {
+          console.log(itemData);
+          console.log("fl ", itemData.index);
+          return (
+            <ExerciseTable
+              key={itemData.index}
+              tableIdx={itemData.index}
+              exerciseName={itemData.item.exerciseName}
+              e
+            />
+          );
+        }}
+      /> */}
+      <ScrollView>
+        {workoutDataContext.exerciseData.map((item, idx) => {
+          console.log("This");
+          return (
+            <ExerciseTable
+              key={idx}
+              tableIdx={idx}
+              exerciseName={item.exerciseName}
+            ></ExerciseTable>
+          );
+        })}
+      </ScrollView>
+      <MyButton
+        title="Add Exercise"
+        onPress={toggleExerciseScreenModal}
+        containerStyle={{
+          marginVertical: 10,
+          width: "90%",
+          alignSelf: "center",
+        }}
+      />
+      <MyButton
+        title="Finish"
+        onPress={finishWorkout}
+        containerStyle={{
+          marginBottom: 10,
+        }}
+      />
     </SafeAreaView>
   );
 }

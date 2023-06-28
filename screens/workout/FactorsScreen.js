@@ -6,6 +6,7 @@ import FactorModal from "../../components/workout/FactorModal";
 import NewFactorModal from "../../components/workout/NewFactorModal";
 import allFactors from "../../data/FactorsList.json";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
+import MyButton from "../../components/global/MyButton";
 
 const FactorsScreen = ({ navigation }) => {
   const [factorModalIsVisible, setFactorModalIsVisible] = useState(false);
@@ -19,7 +20,7 @@ const FactorsScreen = ({ navigation }) => {
   const workoutDataContext = useContext(WorkoutDataContext);
 
   function onPressNext() {
-    navigation.navigate("NewWorkout");
+    navigation.navigate("NewWorkoutStack");
   }
 
   function factorPress(props) {
@@ -108,20 +109,27 @@ const FactorsScreen = ({ navigation }) => {
           >
             <Ionicons color={"white"} name={"add"} size={64}></Ionicons>
           </Pressable>
-          {/* <Text>{props.itemData.item.name}</Text> */}
         </View>
-      </View>
-      <View>
-        {/* Log Button */}
-        <Button
-          title="Log"
-          onPress={() => {
-            console.log("S ", selectedFactor);
-            console.log("A ", factors);
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "flex-end",
           }}
-        ></Button>
-        <Button title="Next" onPress={onPressNext}></Button>
-        <Button title="Icons" onPress={toggleIcons}></Button>
+        >
+          <View>
+            <MyButton
+              title="Next"
+              onPress={onPressNext}
+              containerStyle={
+                {
+                  // width: ",
+                  // alignSelf: "flex-end",
+                }
+              }
+            />
+          </View>
+        </View>
       </View>
       <FactorModal
         isVisible={factorModalIsVisible}

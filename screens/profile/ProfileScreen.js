@@ -16,6 +16,7 @@ import SelectExerciseModal from "../../components/global/SelectExerciseModal";
 import * as LocalStore from "../../store/LocalStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoalItem from "../../components/profile/GoalItem";
+import MyButton from "../../components/global/MyButton";
 
 export default function ProfileScreen() {
   const [addGoalModalIsVisible, setAddGoalModalIsVisible] = useState(false);
@@ -78,7 +79,7 @@ export default function ProfileScreen() {
           <GoalItem removeGoal={removeGoal} goal={itemData.item} />
         )}
       />
-      <Button title="Add a goal" onPress={toggleAddGoalScreenModal} />
+      <MyButton title="Add a goal" onPress={toggleAddGoalScreenModal} />
 
       <Modal
         style={styles.modalContainer}

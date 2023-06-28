@@ -16,6 +16,7 @@ import ProfileScreen from "./screens/profile/ProfileScreen";
 
 import FactorsScreen from "./screens/workout/FactorsScreen";
 import NewWorkoutScreen from "./screens/workout/NewWorkoutScreen";
+import SelectExerciseModal from "./components/global/SelectExerciseModal";
 
 import WorkoutDataProvider from "./store/WorkoutData.js";
 
@@ -29,8 +30,28 @@ const reference = firebase
   .ref("/users/123");
 
 const WorkoutScreenStackNav = createNativeStackNavigator();
-const StatsTab = createMaterialTopTabNavigator();
-const Tab = createBottomTabNavigator();
+const StatsTabNav = createMaterialTopTabNavigator();
+const TabNav = createBottomTabNavigator();
+const NewWorkoutScreenStackNav = createNativeStackNavigator();
+
+function NewWorkoutScreenStack() {
+  return (
+    <NewWorkoutScreenStackNav.Navigator
+      screenOptions={{ animation: "slide_from_right", headerShown: false }}
+      initialRouteName="NewWorkout"
+    >
+      <NewWorkoutScreenStackNav.Screen
+        options={{ headerTitle: "Current Workout" }}
+        name="NewWorkout"
+        component={NewWorkoutScreen}
+      />
+      <NewWorkoutScreenStackNav.Screen
+        name="SelectExerciseScreen"
+        component={SelectExerciseModal}
+      />
+    </NewWorkoutScreenStackNav.Navigator>
+  );
+}
 
 function WorkoutScreenStack() {
   return (
@@ -50,8 +71,8 @@ function WorkoutScreenStack() {
       />
       <WorkoutScreenStackNav.Screen
         options={{ headerTitle: "Current Workout" }}
-        name="NewWorkout"
-        component={NewWorkoutScreen}
+        name="NewWorkoutStack"
+        component={NewWorkoutScreenStack}
       />
     </WorkoutScreenStackNav.Navigator>
   );
@@ -59,21 +80,21 @@ function WorkoutScreenStack() {
 
 function StatsScreenTab() {
   return (
-    <StatsTab.Navigator
+    <StatsTabNav.Navigator
       screenOptions={{ headerShown: true, swipeEnabled: false }}
       initialRouteName="GoalSpecific"
     >
-      <StatsTab.Screen
+      <StatsTabNav.Screen
         name="History"
         options={{ headerTitle: "History" }}
         component={HistoryScreen}
       />
-      <StatsTab.Screen
+      <StatsTabNav.Screen
         options={{ headerTitle: "Goal Specific" }}
         name="Goal Specific"
         component={GoalSpecificScreen}
       />
-    </StatsTab.Navigator>
+    </StatsTabNav.Navigator>
   );
 }
 
@@ -101,7 +122,7 @@ export default function App() {
       <WorkoutDataProvider>
         <StatusBar style="auto" />
         <NavigationContainer>
-          <Tab.Navigator
+          <TabNav.Navigator
             initialRouteName="Workout"
             screenOptions={({ route }) => ({
               tabBarIcon: ({ focused, color, size }) => {
@@ -125,23 +146,23 @@ export default function App() {
               tabBarInactiveTintColor: "gray",
             })}
           >
-            <Tab.Screen
+            <TabNav.Screen
               name="Profile"
               component={ProfileScreen}
               options={({ route }) => ({
                 title: "Your Goals",
               })}
-            ></Tab.Screen>
-            <Tab.Screen
+            ></TabNav.Screen>
+            <TabNav.Screen
               name="Workout"
               component={WorkoutScreenStack}
               options={({ route }) => ({
                 title: "Workout",
                 headerShown: false,
               })}
-            ></Tab.Screen>
-            <Tab.Screen name="Stats" component={StatsScreenTab}></Tab.Screen>
-          </Tab.Navigator>
+            ></TabNav.Screen>
+            {/* <Tab.Screen name="Stats" component={StatsScreenTab}></Tab.Screen> */}
+          </TabNav.Navigator>
         </NavigationContainer>
       </WorkoutDataProvider>
     </>

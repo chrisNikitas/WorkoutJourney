@@ -1,14 +1,6 @@
 import { useEffect, useContext, useState, useCallback } from "react";
 import { useIsFocused, useFocusEffect } from "@react-navigation/native";
-import {
-  FlatList,
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  Pressable,
-  Alert,
-} from "react-native";
+import { FlatList, View, Button, Pressable, Alert } from "react-native";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import ExerciseSummaryCard from "../../components/history/ExerciseSummaryCard.js";
 export default function HistoryScreen() {
@@ -20,8 +12,7 @@ export default function HistoryScreen() {
     workoutDataContext.getAllWorkouts().then((v) => {
       setData(v);
     });
-    console.log("Called");
-  }, [useIsFocused(), rerender]);
+  }, [rerender, data]);
 
   const removeAllData = () => {
     workoutDataContext.removeAllData();
@@ -45,15 +36,16 @@ export default function HistoryScreen() {
       },
     ]);
   };
+  // removeAllData();
   // console.log("Data", data[0]["exerciseData"]);
   return (
     <>
-      <View style={styles.mainContent}>
+      <View>
         <Button title={"Remove All Data"} onPress={removeAllData}></Button>
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <Pressable on onLongPress={() => removeWorkout(item.key)}>
+            <Pressable onLongPress={() => removeWorkout(item.key)}>
               <ExerciseSummaryCard workoutData={item}></ExerciseSummaryCard>
             </Pressable>
           )}

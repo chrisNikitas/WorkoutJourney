@@ -232,6 +232,7 @@ export default function WorkoutDataProvider({ children }) {
   const removeAllData = () => {
     console.log("Removing");
     LocalStore.storeData("AllWorkouts", []);
+    setAllWorkouts([]);
   };
 
   const removeWorkout = (key) => {
@@ -258,7 +259,7 @@ export default function WorkoutDataProvider({ children }) {
     removeWorkout: removeWorkout,
     addDummyWorkout: addDummyWorkout,
   };
-
+  // removeAllData();
   return (
     <WorkoutDataContext.Provider value={value}>
       {children}

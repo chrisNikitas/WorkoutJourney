@@ -3,6 +3,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState, useContext } from "react";
 import { Button } from "@rneui/base";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
+import MyButton from "../../components/global/MyButton.js";
 
 export default function WorkoutScreen({ navigation }) {
   const [workoutsLogged, setWorkoutsLogged] = useState(0);
@@ -12,7 +13,7 @@ export default function WorkoutScreen({ navigation }) {
     workoutDataContext.getAllWorkouts().then((v) => {
       setWorkoutsLogged(v.length);
     });
-  }, [useIsFocused()]);
+  }, []);
 
   function onStartWorkout() {
     navigation.navigate("Factors");
@@ -34,8 +35,10 @@ export default function WorkoutScreen({ navigation }) {
           <Text> {"\nworkouts"}</Text>
         </Text>
       </View>
-      <Button title="Start Workout" onPress={onStartWorkout}></Button>
-      <Button title="Add Dummy Workout" onPress={addDummyWorkout}></Button>
+      <View style={{ flex: 1 }}>
+        <MyButton title="Start Workout" onPress={onStartWorkout}></MyButton>
+      </View>
+      <MyButton title="Add Dummy Workout" onPress={addDummyWorkout}></MyButton>
     </SafeAreaView>
   );
 }
@@ -45,7 +48,11 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     flex: 1,
   },
-  woCounterContainer: { margin: 20 },
+  woCounterContainer: {
+    margin: 20,
+    flex: 1,
+    justifyContent: "center",
+  },
   woCounterText: {
     textAlign: "center",
     fontSize: 20,
