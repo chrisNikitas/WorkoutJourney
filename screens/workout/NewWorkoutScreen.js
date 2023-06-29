@@ -1,39 +1,41 @@
 import { StyleSheet, SafeAreaView, ScrollView, FlatList } from "react-native";
 import { Button } from "@rneui/base";
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useEffect, memo } from "react";
 import ExerciseTable from "../../components/workout/ExerciseTable";
-import SelectExerciseModal from "../../components/global/SelectExerciseModal";
+import SelectExerciseScreen from "../../components/global/SelectExerciseScreen";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import MyButton from "../../components/global/MyButton";
+import ExerciseTableList from "../../components/workout/ExerciseTableList";
 
-export default function WorkoutScreen({ navigation }) {
-  const [exerciseScreenModalIsVisible, setExerciseScreenModalIsVisible] =
-    useState(false);
+const MemoedExerciseTableList = memo(ExerciseTableList);
 
+export default function WorkoutScreen({ route, navigation }) {
   const workoutDataContext = useContext(WorkoutDataContext);
 
+  useEffect(() => {
+    if (route.params) {
+      addExercise(route.params);
+    }
+  }, [route.params]);
+
   function toggleExerciseScreenModal() {
-    setExerciseScreenModalIsVisible(!exerciseScreenModalIsVisible);
+    // setExerciseScreenModalIsVisible(!exerciseScreenModalIsVisible);
+    navigation.navigate("SelectExerciseScreen", "NewWorkout");
   }
 
   function addExercise(exercise) {
-    toggleExerciseScreenModal();
+    // toggleExerciseScreenModal();
     workoutDataContext.addExercise(exercise);
   }
 
   const finishWorkout = () => {
     date = new Date();
-    workoutDataContext.addWorkout();
+    workoutDataContext.finishWorkout();
     navigation.navigate("StartWorkout");
   };
 
   return (
     <SafeAreaView style={styles.appContainer}>
-      <SelectExerciseModal
-        onSelect={addExercise}
-        isVisible={exerciseScreenModalIsVisible}
-        onCancel={toggleExerciseScreenModal}
-      ></SelectExerciseModal>
       {/* <FlatList
         data={workoutDataContext.exerciseData}
         renderItem={(itemData) => {
@@ -51,7 +53,7 @@ export default function WorkoutScreen({ navigation }) {
       /> */}
       <ScrollView>
         {workoutDataContext.exerciseData.map((item, idx) => {
-          console.log("This");
+          // console.log("This");
           return (
             <ExerciseTable
               key={idx}
@@ -61,6 +63,7 @@ export default function WorkoutScreen({ navigation }) {
           );
         })}
       </ScrollView>
+      {/* <MemoedExerciseTableList /> */}
       <MyButton
         title="Add Exercise"
         onPress={toggleExerciseScreenModal}

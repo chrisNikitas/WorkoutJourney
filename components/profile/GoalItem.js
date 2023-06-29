@@ -44,7 +44,7 @@ const GoalItem = ({ goal, removeGoal }) => {
             numberOfLines={1}
             style={styles.sets_reps_cont}
           >
-            <Text style={styles.sets_reps_titles}>Seps</Text>
+            <Text style={styles.sets_reps_titles}>Sets</Text>
             <Text style={styles.sets_reps_values}>{goal.sets}</Text>
           </View>
           <View style={styles.sets_reps_cont}>

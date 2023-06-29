@@ -51,7 +51,7 @@ const GoalSpecificGraph = ({
       },
     ];
   };
-
+  console.log("BarGraph Data", barGraphData);
   return (
     <>
       <ScrollView style={{}}>
@@ -63,8 +63,8 @@ const GoalSpecificGraph = ({
           }}
         >
           <VictoryChart
-            // domainPadding={{ x: [20, 20] }}
-            // padding={{ bottom: 100, top: 100, left: 20, right: 20 }}
+            domainPadding={{ x: [20, 20] }}
+            padding={{ bottom: 100, top: 100, left: 20, right: 20 }}
             containerComponent={
               <VictoryZoomContainer
                 onZoomDomainChange={({ x, y }) => {
@@ -84,10 +84,10 @@ const GoalSpecificGraph = ({
               // tickCount={4}
               // invertAxis={true}
               tickFormat={(x, i) => {
-                return barGraphData[0]
-                  ? barGraphData[0].date.getDate() +
+                return barGraphData[x]
+                  ? barGraphData[x].date.getDate() +
                       "/" +
-                      (barGraphData[0].date.getMonth() + 1)
+                      (barGraphData[x].date.getMonth() + 1)
                   : null;
               }}
             />

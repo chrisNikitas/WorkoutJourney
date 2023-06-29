@@ -20,7 +20,7 @@ const FactorsScreen = ({ navigation }) => {
   const workoutDataContext = useContext(WorkoutDataContext);
 
   function onPressNext() {
-    navigation.navigate("NewWorkoutStack");
+    navigation.navigate("NewWorkout");
   }
 
   function factorPress(props) {

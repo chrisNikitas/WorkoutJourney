@@ -10,6 +10,7 @@ import {
   calculateSessionSpecificVolumeVsGoal,
 } from "../../components/history/specificityCalculation/specificityCalculation.js";
 import GoalSelector from "../../components/history/GoalSelector";
+import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData";
 
 const GoalSpecificScreen = () => {
   const [barGraphData, setBarGraphData] = useState([
@@ -23,17 +24,19 @@ const GoalSpecificScreen = () => {
   const [loading, setLoading] = useState(true);
   const [goalsLoading, setGoalsLoading] = useState(true);
 
-  const workoutDataContext = useContext(WorkoutDataContext);
+  // const workoutDataContext = useContext(WorkoutDataContext);
+  const allWorkoutsDataContext = useContext(AllWorkoutsDataContext);
 
   useEffect(() => {
-    console.log("AW", workoutDataContext.allWorkouts);
-    LocalStore.getData("goals").then((gs) => {
-      setGoals(gs);
-      setGoalsLoading(false);
-    });
+    // console.log("AW", workoutDataContext.allWorkouts);
+    if (goalsLoading)
+      LocalStore.getData("goals").then((gs) => {
+        console.log("Loading Goals");
+        setGoals(gs);
+        setGoalsLoading(false);
+      });
     if (!goalsLoading) {
-      workoutDataContext
-        .getAllWorkouts()
+      LocalStore.getData("AllWorkouts")
         .then((v) => {
           setAllWorkouts(v);
           totalVolumes = [];
@@ -58,6 +61,7 @@ const GoalSpecificScreen = () => {
             specificVolumes.push(specificVolumesPerGoal);
 
             dates.push(new Date(date));
+            console.log("V: ", v[0].exerciseData);
           });
 
           setBarGraphData(
@@ -76,7 +80,8 @@ const GoalSpecificScreen = () => {
           console.log(error);
         });
     }
-  }, [goalsLoading]);
+    console.log("Effect Graph");
+  }, [goalsLoading, allWorkoutsDataContext.allWorkouts]);
 
   const onGoalSelect = (i) => {
     setSelectedGoalIndex(i);

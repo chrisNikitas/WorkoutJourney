@@ -1,21 +1,41 @@
 import { useEffect, useContext, useState, useCallback } from "react";
-import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import { FlatList, View, Button, Pressable, Alert } from "react-native";
-import { WorkoutDataContext } from "../../store/WorkoutData.js";
+// import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import ExerciseSummaryCard from "../../components/history/ExerciseSummaryCard.js";
+import { useIsFocused } from "@react-navigation/native";
+import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData.js";
+
 export default function HistoryScreen() {
   const [data, setData] = useState([]);
   const [rerender, setRerender] = useState(false);
-  workoutDataContext = useContext(WorkoutDataContext);
-
+  // workoutDataContext = useContext(WorkoutDataContext);
+  const allWorkoutsDataContext = useContext(AllWorkoutsDataContext);
   useEffect(() => {
-    workoutDataContext.getAllWorkouts().then((v) => {
+    allWorkoutsDataContext.getAllWorkouts().then((v) => {
       setData(v);
     });
-  }, [rerender, data]);
+    // workoutDataContext.getAllWorkouts().then((v) => {
+    //   setData(v);
+    // });
+    console.log("Effect History");
+  }, [rerender, allWorkoutsDataContext.allWorkouts]);
 
   const removeAllData = () => {
-    workoutDataContext.removeAllData();
+    Alert.alert("Confirm", "Missclick?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        // onPress: () => console.log("OK pressed"),
+        onPress: () => {
+          allWorkoutsDataContext.removeAllData();
+          setRerender(!rerender);
+        },
+      },
+    ]);
   };
 
   const removeWorkout = (key) => {
@@ -30,7 +50,8 @@ export default function HistoryScreen() {
         text: "OK",
         // onPress: () => console.log("OK pressed"),
         onPress: () => {
-          workoutDataContext.removeWorkout(key);
+          allWorkoutsDataContext.removeWorkout(key);
+          // workoutDataContext.removeWorkout(key);
           setRerender(!rerender);
         },
       },

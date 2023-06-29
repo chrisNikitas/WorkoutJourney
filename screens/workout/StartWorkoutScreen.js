@@ -3,17 +3,20 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState, useContext } from "react";
 import { Button } from "@rneui/base";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
+import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData.js";
 import MyButton from "../../components/global/MyButton.js";
 
 export default function WorkoutScreen({ navigation }) {
   const [workoutsLogged, setWorkoutsLogged] = useState(0);
 
-  workoutDataContext = useContext(WorkoutDataContext);
+  const workoutDataContext = useContext(WorkoutDataContext);
+  const allWorkoutDataContext = useContext(AllWorkoutsDataContext);
+
   useEffect(() => {
-    workoutDataContext.getAllWorkouts().then((v) => {
+    allWorkoutDataContext.getAllWorkouts().then((v) => {
       setWorkoutsLogged(v.length);
     });
-  }, []);
+  }, [allWorkoutDataContext.allWorkouts]);
 
   function onStartWorkout() {
     navigation.navigate("Factors");
@@ -23,7 +26,7 @@ export default function WorkoutScreen({ navigation }) {
   }
 
   const addDummyWorkout = () => {
-    workoutDataContext.addDummyWorkout();
+    allWorkoutDataContext.addDummyWorkout();
   };
 
   return (

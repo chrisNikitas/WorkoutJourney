@@ -5,6 +5,7 @@ import {
   TextInput,
   Pressable,
   Alert,
+  Button,
 } from "react-native";
 import { useState, useContext } from "react";
 import { DataTable } from "react-native-paper";
@@ -17,8 +18,10 @@ export default function ExerciseTable(props) {
 
   const workoutDataContext = useContext(WorkoutDataContext);
 
+  console.log("Rendering Table");
+
   const removeSetButton = (exIdx, setIdx) => {
-    Alert.alert("Confirm", "Delete set " + setIdx + "?", [
+    Alert.alert("Confirm", "Delete set " + (setIdx + 1) + "?", [
       {
         text: "Cancel",
         onPress: () => console.log("Cancel Pressed"),
@@ -32,18 +35,22 @@ export default function ExerciseTable(props) {
   };
 
   const removeExercise = () => {
-    Alert.alert("Confirm", "Delete exercise " + props.tableIdx + "?", [
-      {
-        text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      {
-        text: "OK",
-        // onPress: () => console.log("OK pressed"),
-        onPress: () => workoutDataContext.removeExercise(props.tableIdx),
-      },
-    ]);
+    Alert.alert(
+      "Confirm",
+      "Remove " + props.exerciseName + " from your workout ?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          // onPress: () => console.log("OK pressed"),
+          onPress: () => workoutDataContext.removeExercise(props.tableIdx),
+        },
+      ]
+    );
   };
 
   const addSet = () => {
@@ -54,6 +61,10 @@ export default function ExerciseTable(props) {
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
+      <Text style={{ fontSize: 12 }}>
+        Long press exercise name to remove it from your workout
+      </Text>
+      <Button title="Press me" onPress={() => console.log("yo")}></Button>
       <DataTable style={styles.container}>
         <View style={styles.content}>
           <Pressable
@@ -127,7 +138,7 @@ export default function ExerciseTable(props) {
           (set, i) => (
             <DataTable.Row key={i} style={styles.row}>
               <DataTable.Cell style={[styles.cell, { flex: 5 }]}>
-                {i}
+                {i + 1}
               </DataTable.Cell>
               <DataTable.Cell style={[styles.cell, { flex: 3 }]}>
                 {set[0]}
