@@ -16,44 +16,46 @@ import { similarityOfExercises } from "./specificityCalculation/specificityCalcu
 const GoalSpecificGraph = ({
   data,
   barGraphData,
+  pieChartDataProp,
   selectedGoalIndex,
   selectedGoal,
   noGoals,
+  onBarPressProp,
 }) => {
-  const [pieChartData, setPieChartData] = useState([]);
-  const [pieChartVis, setPieChartVis] = useState(false);
+  // const [pieChartData, setPieChartData] = useState([]);
+  // const [pieChartVis, setPieChartVis] = useState(false);
   const [selectedBar, setSelectedBar] = useState(-1);
   const [barWidth, setBarWidth] = useState(20);
 
   const goalDataContext = useContext(GoalDataContext);
 
-  useEffect(() => {
-    console.log("Goal Index: ", selectedGoalIndex);
-    console.log("Goal:       ", selectedGoal);
-    plotSingleWorkoutGraph(selectedBar);
-  }, [selectedGoal, goalDataContext.goals]);
+  // useEffect(() => {
+  //   console.log("Goal Index: ", selectedGoalIndex);
+  //   console.log("Goal:       ", selectedGoal);
+  //   plotSingleWorkoutGraph(selectedBar);
+  // }, [selectedGoal, goalDataContext.goals]);
 
-  const plotSingleWorkoutGraph = (index) => {
-    if (noGoals.current || index == -1 || selectedGoalIndex == -1) {
-      console.log("No Pie Chart");
-      setPieChartData([]);
-      setPieChartVis(false);
-      return;
-    }
-    console.log("No Pie Chart");
+  // const plotSingleWorkoutGraph = (index) => {
+  //   if (noGoals.current || index == -1 || selectedGoalIndex == -1) {
+  //     console.log("No Pie Chart");
+  //     setPieChartData([]);
+  //     setPieChartVis(false);
+  //     return;
+  //   }
+  //   console.log("No Pie Chart");
 
-    pieChartDataVar = data[index]["exerciseData"].map((exData, i) => {
-      console.log("ExData: ", exData);
-      return {
-        x: exData.exerciseName,
-        y: exData.volume,
-        colorIntensity: similarityOfExercises(selectedGoal, exData.exercise),
-      };
-    });
+  //   pieChartDataVar = data[index]["exerciseData"].map((exData, i) => {
+  //     console.log("ExData: ", exData);
+  //     return {
+  //       x: exData.exerciseName,
+  //       y: exData.volume,
+  //       colorIntensity: similarityOfExercises(selectedGoal, exData.exercise),
+  //     };
+  //   });
 
-    setPieChartData(pieChartDataVar);
-    setPieChartVis(true);
-  };
+  //   setPieChartData(pieChartDataVar);
+  //   setPieChartVis(true);
+  // };
 
   const onBarPress = () => {
     return [
@@ -61,16 +63,19 @@ const GoalSpecificGraph = ({
         target: "data",
         mutation: (props) => {
           let index = props.datum.x - 1;
-          plotSingleWorkoutGraph(index);
+          // plotSingleWorkoutGraph(index);
 
           setSelectedBar(index);
+          onBarPressProp(index);
         },
       },
     ];
   };
 
   const GoalSpecificPieChart = () => {
-    if (!pieChartVis) return;
+    if (pieChartDataProp.length == 0) {
+      return;
+    }
     return (
       <>
         <Text style={styles.explanatoryText}>
@@ -79,7 +84,7 @@ const GoalSpecificGraph = ({
         </Text>
 
         <VictoryPie
-          data={pieChartData}
+          data={pieChartDataProp}
           labelRadius={({ innerRadius }) => 20}
           // radius={({ datum }) => 50 + (datum.y * 1) / 7}
           // labelPosition={({ index }) => "centroid"}
@@ -92,7 +97,7 @@ const GoalSpecificGraph = ({
               // fill: ({ index }) => "black",
 
               fill: ({ index }) => {
-                let a = pieChartData[index]["colorIntensity"] + 0.1;
+                let a = pieChartDataProp[index]["colorIntensity"] + 0.1;
                 return "rgba(255, 99, 71," + a + " )";
               },
             },
@@ -113,13 +118,13 @@ const GoalSpecificGraph = ({
           }}
         >
           <Text style={styles.explanatoryText}>
+            This graph can help you understand how much you are training for
+            each of your goals {"\n\n"}
             The <Text style={{ fontWeight: 700 }}>Volume</Text> is calculated by
             multiplying the weight with the number of sets and repetitions.{" "}
             {"\n"}
             <Text style={{ fontWeight: 700 }}>Specific Volume</Text>, is volume
-            that helps you achieve your selected goal.{"\n\n"}
-            This graph can help you understand how much you are training for
-            each of your goals
+            that helps you achieve your selected goal.
           </Text>
           <VictoryChart
             domainPadding={{ x: [20, 20] }}
@@ -240,7 +245,7 @@ const GoalSpecificGraph = ({
           </Text>
         </View>
 
-        <GoalSpecificPieChart visible={pieChartVis}></GoalSpecificPieChart>
+        <GoalSpecificPieChart></GoalSpecificPieChart>
       </ScrollView>
     </>
   );

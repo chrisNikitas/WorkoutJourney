@@ -6,9 +6,10 @@ import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import { VictoryBar, VictoryChart, VictoryAxis } from "victory-native";
 import GoalSpecificGraph from "../../components/history/GoalSpecificGraph.js";
 import {
-  calculateSessionSpecificVolume,
+  similarityOfExercises,
   calculateSessionSpecificVolumeVsGoal,
 } from "../../components/history/specificityCalculation/specificityCalculation.js";
+
 import GoalSelector from "../../components/history/GoalSelector";
 import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData";
 import { GoalDataContext } from "../../store/GoalData";
@@ -17,9 +18,11 @@ const GoalSpecificScreen = () => {
   const [barGraphData, setBarGraphData] = useState([
     { dates: new Date(), totalVolumes: 5 },
   ]);
+  const [pieChartData, setPieChartData] = useState([]);
   const [goals, setGoals] = useState([]);
   const [selectedGoal, setSelectedGoal] = useState({});
   const [selectedGoalIndex, setSelectedGoalIndex] = useState(0);
+  const [selectedBar, setSelectedBar] = useState(-1);
 
   const [allWorkouts, setAllWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +35,7 @@ const GoalSpecificScreen = () => {
   const noGoals = useRef(true);
 
   useEffect(() => {
-    setSelectedGoalIndex(-1);
+    // setSelectedGoalIndex(-1);
 
     goalDataContext
       .getGoals()
@@ -42,14 +45,15 @@ const GoalSpecificScreen = () => {
         if (gs.length == 0) {
           console.log("No Goals");
           noGoals.current = true;
-          // setSelectedGoalIndex(-1);
-          // setSelectedGoal(gs[selectedGoalIndex].exercise);
+          setSelectedGoalIndex(-1);
+          setSelectedGoal({});
         } else {
           console.log("Yes Goals");
 
           noGoals.current = false;
 
-          // setSelectedGoalIndex(0);
+          setSelectedGoalIndex(0);
+          setSelectedGoal(gs[0].exercise);
         }
         allWorkoutsDataContext
           .getAllWorkouts()
@@ -101,6 +105,40 @@ const GoalSpecificScreen = () => {
       });
   }, [allWorkoutsDataContext.allWorkouts, goalDataContext.goals]);
 
+  useEffect(() => {
+    setSingleWorkoutGraphData(selectedBar);
+  }, [selectedGoal, goalDataContext.goals]);
+
+  const setSingleWorkoutGraphData = (index) => {
+    if (
+      noGoals.current ||
+      index == -1 ||
+      selectedGoalIndex == -1 ||
+      allWorkouts.length == 0
+    ) {
+      console.log("No Pie Chart");
+      setPieChartData([]);
+      return;
+    }
+    console.log("Yes Pie Chart");
+    pieChartDataVar = allWorkouts[index]["exerciseData"].map((exData, i) => {
+      console.log("ExData: ", exData);
+      console.log("SelectedGoal: ", selectedGoal);
+      return {
+        x: exData.exerciseName,
+        y: exData.volume,
+        colorIntensity: similarityOfExercises(selectedGoal, exData.exercise),
+      };
+    });
+
+    setPieChartData(pieChartDataVar);
+  };
+
+  const onBarPress = (index) => {
+    setSelectedBar(index);
+    setSingleWorkoutGraphData(index);
+  };
+
   const onGoalSelect = (i) => {
     setSelectedGoalIndex(i);
     setSelectedGoal(goals[i].exercise);
@@ -151,9 +189,11 @@ const GoalSpecificScreen = () => {
         <GoalSpecificGraph
           data={allWorkouts}
           barGraphData={barGraphData}
+          pieChartDataProp={pieChartData}
           selectedGoalIndex={selectedGoalIndex}
           selectedGoal={selectedGoal}
           noGoals={noGoals}
+          onBarPressProp={onBarPress}
         />
       </>
     );
