@@ -24,6 +24,7 @@
       "package": "com.chrisnik.new_fitness_app"
     },
     "plugins": ["@react-native-firebase/app"],
+
     "web": {
       "favicon": "./assets/favicon.png"
     },

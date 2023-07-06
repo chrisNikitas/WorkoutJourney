@@ -10,4 +10,10 @@ export default StyleSheet.create({
     elevation: 3,
     backgroundColor: "black",
   },
+  explanatoryText: {
+    fontSize: 12,
+    marginTop: 5,
+    marginLeft: 20,
+    marginBottom: 5,
+  },
 });

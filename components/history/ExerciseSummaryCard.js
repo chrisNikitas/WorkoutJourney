@@ -1,20 +1,21 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import allFactors from "../../data/FactorsList.json";
 
 const ExerciseSummaryCard = ({ workoutData }) => {
   const FactorSummary = ({ factor }) => {
+    let factorVal;
+
+    if (factor.type == "1-5") {
+      factorVal = factor.value;
+    } else if (factor.type == "bool") {
+      if (factor.value == true) factorVal = "✓";
+      else factorVal = "✗";
+    }
     return (
       <>
         <View style={styles.factorSummary}>
-          <Ionicons
-            style={styles.factorIcon}
-            name={allFactors.find((v) => v.name == factor.name).icon}
-            size={25}
-          />
-          <Text style={styles.factorValue}>
-            {factor.value == "true" ? "✓" : factor.value}
-          </Text>
+          <Ionicons style={styles.factorIcon} name={factor.icon} size={25} />
+          <Text style={styles.factorValue}>{factorVal}</Text>
         </View>
       </>
     );

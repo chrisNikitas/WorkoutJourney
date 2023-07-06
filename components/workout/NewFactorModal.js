@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
+import * as FileSystem from "expo-file-system";
+
 import { useState } from "react";
 
 import DropDownPicker from "react-native-dropdown-picker";
@@ -18,7 +20,7 @@ import CancelButton from "../global/CancelButton";
 import IconSelectionModal from "../global/IconsModal";
 import allFactors from "../../data/FactorsList.json";
 
-const NewFactorModal = ({ isVisible, setIsVisible }) => {
+const NewFactorModal = ({ isVisible, setIsVisible, addNewFactorProp }) => {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [type, setType] = useState(null);
@@ -40,18 +42,12 @@ const NewFactorModal = ({ isVisible, setIsVisible }) => {
   };
 
   const selectIcon = (iconName) => {
-    console.log(iconName);
     setIcon(iconName);
   };
 
   const addNewFactor = () => {
-    //save to file
-    allFactors.push({
-      name: name,
-      type: type,
-      desc: desc,
-      icon: icon,
-    });
+    const newFactor = { name: name, type: type, desc: desc, icon: icon };
+    addNewFactorProp(newFactor);
     closeModal();
   };
   //   txt = icon === "help" ? "Add Icon" : "";
@@ -124,9 +120,7 @@ const NewFactorModal = ({ isVisible, setIsVisible }) => {
           <View style={styles.buttonContainer}>
             <Button
               disabled={
-                name != null && type != null && desc != null && icon != "help"
-                  ? false
-                  : true
+                name != "" && type != null && icon != "help" ? false : true
               }
               title="Add"
               onPress={addNewFactor}

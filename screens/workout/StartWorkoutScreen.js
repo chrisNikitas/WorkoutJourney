@@ -14,14 +14,14 @@ export default function WorkoutScreen({ navigation }) {
 
   useEffect(() => {
     allWorkoutDataContext.getAllWorkouts().then((v) => {
-      setWorkoutsLogged(v.length);
+      if (v) setWorkoutsLogged(v.length);
+      else setWorkoutsLogged(0);
     });
   }, [allWorkoutDataContext.allWorkouts]);
 
   function onStartWorkout() {
     navigation.navigate("Factors");
     date = new Date();
-    // console.log("Date ", date.toLocaleString());
     workoutDataContext.setStartTime(date);
   }
 
@@ -41,7 +41,23 @@ export default function WorkoutScreen({ navigation }) {
       <View style={{ flex: 1 }}>
         <MyButton title="Start Workout" onPress={onStartWorkout}></MyButton>
       </View>
-      <MyButton title="Add Dummy Workout" onPress={addDummyWorkout}></MyButton>
+      {/* <MyButton title="Add Dummy Workout" onPress={addDummyWorkout}></MyButton>
+      <MyButton
+        title="Remove All Data"
+        onPress={allWorkoutDataContext.removeAllData}
+      ></MyButton>
+      <MyButton
+        title={"To entry"}
+        onPress={() =>
+          navigation.navigate("SurveyContent", { screen: "EntrySurvey" })
+        }
+      />
+      <MyButton
+        title={"To Exit"}
+        onPress={() =>
+          navigation.navigate("SurveyContent", { screen: "ExitSurvey" })
+        }
+      /> */}
     </SafeAreaView>
   );
 }

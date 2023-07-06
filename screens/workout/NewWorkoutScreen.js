@@ -1,16 +1,12 @@
-import { StyleSheet, SafeAreaView, ScrollView, FlatList } from "react-native";
-import { Button } from "@rneui/base";
-import { useState, useContext, useEffect, memo } from "react";
-import ExerciseTable from "../../components/workout/ExerciseTable";
-import SelectExerciseScreen from "../../components/global/SelectExerciseScreen";
-import { WorkoutDataContext } from "../../store/WorkoutData.js";
+import { useContext, useEffect, useRef } from "react";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import MyButton from "../../components/global/MyButton";
-import ExerciseTableList from "../../components/workout/ExerciseTableList";
-
-const MemoedExerciseTableList = memo(ExerciseTableList);
+import ExerciseTable from "../../components/workout/ExerciseTable";
+import { WorkoutDataContext } from "../../store/WorkoutData.js";
 
 export default function WorkoutScreen({ route, navigation }) {
   const workoutDataContext = useContext(WorkoutDataContext);
+  const scrollViewRef = useRef();
 
   useEffect(() => {
     if (route.params) {
@@ -25,7 +21,12 @@ export default function WorkoutScreen({ route, navigation }) {
 
   function addExercise(exercise) {
     // toggleExerciseScreenModal();
+    // scrollViewRef.current.scrollToEnd({ animated: false });
+
     workoutDataContext.addExercise(exercise);
+    setTimeout(() => {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }, 500); // Adjust the delay as needed
   }
 
   const finishWorkout = () => {
@@ -36,26 +37,11 @@ export default function WorkoutScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.appContainer}>
-      {/* <FlatList
-        data={workoutDataContext.exerciseData}
-        renderItem={(itemData) => {
-          console.log(itemData);
-          console.log("fl ", itemData.index);
-          return (
-            <ExerciseTable
-              key={itemData.index}
-              tableIdx={itemData.index}
-              exerciseName={itemData.item.exerciseName}
-              e
-            />
-          );
-        }}
-      /> */}
-      <ScrollView>
+      <ScrollView ref={scrollViewRef} keyboardShouldPersistTaps={"handled"}>
         {workoutDataContext.exerciseData.map((item, idx) => {
-          // console.log("This");
           return (
             <ExerciseTable
+              scrollViewRef={scrollViewRef}
               key={idx}
               tableIdx={idx}
               exerciseName={item.exerciseName}

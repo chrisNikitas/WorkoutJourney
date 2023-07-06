@@ -9,7 +9,20 @@ const FactorModal = ({
   selectedFactor,
   addFactorData,
 }) => {
-  let factorVal = 3;
+  let factorVal;
+
+  switch (selectedFactor["type"]) {
+    case "1-5":
+      // code block
+      factorVal = 3;
+      break;
+    case "bool":
+      if (selectedFactor.prevVal == -1) factorVal = true;
+      else factorVal = !selectedFactor.prevVal;
+      // code block
+      break;
+  }
+
   const FactorDataEntry = () => {
     if (selectedFactor["type"] == "1-5") {
       return (
@@ -23,10 +36,24 @@ const FactorModal = ({
               factorVal = value;
             }}
           />
+          <Button
+            title="Add"
+            onPress={() => {
+              addFactorData(factorVal);
+            }}
+          />
         </>
       );
     }
     if (selectedFactor["type"] == "bool") {
+      return (
+        <Button
+          title={factorVal == true ? "Add" : "Remove"}
+          onPress={() => {
+            addFactorData(factorVal);
+          }}
+        />
+      );
       return;
     }
   };
@@ -53,12 +80,6 @@ const FactorModal = ({
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Button
-          title="Add"
-          onPress={() => {
-            addFactorData(factorVal);
-          }}
-        />
         <Button title={"Cancel"} onPress={() => setIsVisible(false)}></Button>
       </View>
     </Modal>

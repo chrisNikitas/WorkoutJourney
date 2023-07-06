@@ -38,13 +38,9 @@ const IconSelectionModal = ({
 
   const [selectedIcon, setSelectedIcon] = useState("");
 
-  // const icons = Object.keys(Ionicons["glyphMap"]);
-
   const handleIconSelect = (iconName) => {
-    // console.log(iconName);
     selectIcon(iconName);
     onClose();
-    // setSelectedIcon(iconName);
   };
 
   function searchIcon(s) {

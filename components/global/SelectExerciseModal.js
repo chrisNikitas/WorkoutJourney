@@ -23,12 +23,10 @@ const SelectExerciseModal = ({ isVisible, onSelect, onCancel }) => {
   function searchExercises(s) {
     setSearch(s);
     exercises = ["pullups", "pushups"];
-    console.log(Array.isArray(exercises));
     let res = allExerciseList.filter((ex) =>
       ex.name.toLowerCase().includes(s.toLowerCase())
     );
     setExerciseList(res);
-    // console.log(res);
   }
 
   return (

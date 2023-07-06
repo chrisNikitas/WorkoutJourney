@@ -1,40 +1,54 @@
-import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import { DataTable } from "react-native-paper";
-import { KeyboardAvoidingView } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { navigationRef } from "./RootNavigation";
+import { useEffect } from "react";
 
-import WorkoutScreen from "./screens/workout/StartWorkoutScreen";
-import HistoryScreen from "./screens/history/HistoryScreen";
+import { StatusBar } from "expo-status-bar";
+
 import GoalSpecificScreen from "./screens/history/GoalSpecificScreen";
+import HistoryScreen from "./screens/history/HistoryScreen";
 import ProfileScreen from "./screens/profile/ProfileScreen";
+import WorkoutScreen from "./screens/workout/StartWorkoutScreen";
 
+import SelectExerciseScreen from "./components/global/SelectExerciseScreen";
 import FactorsScreen from "./screens/workout/FactorsScreen";
 import NewWorkoutScreen from "./screens/workout/NewWorkoutScreen";
-import SelectExerciseModal from "./components/global/SelectExerciseModal";
-import SelectExerciseScreen from "./components/global/SelectExerciseScreen";
 
-import WorkoutDataProvider from "./store/WorkoutData.js";
 import AllWorkoutsDataProvider from "./store/AllWorkoutsData";
+import WorkoutDataProvider from "./store/WorkoutData.js";
+import GoalDataProvider from "./store/GoalData";
 
-import { firebase } from "@react-native-firebase/database";
+import ExitSurvey from "./components/surveys/ExitSurvey";
+import EntrySurvey from "./components/surveys/EntrySurvey";
+import messaging from "@react-native-firebase/messaging";
+import { Alert } from "react-native";
 
-const reference = firebase
-  .app()
-  .database(
-    "https://fitness-app-cc6bd-default-rtdb.europe-west1.firebasedatabase.app/"
-  )
-  .ref("/users/123");
+import * as Notifications from "expo-notifications";
+// import * as NotificationHandler from "./NotificationHandler";
+
+import init from "./appInit";
 
 const WorkoutScreenStackNav = createNativeStackNavigator();
 const StatsTabNav = createMaterialTopTabNavigator();
 const TabNav = createBottomTabNavigator();
 const ProfileScreenStackNav = createNativeStackNavigator();
+const SurveysStackNav = createNativeStackNavigator();
+const AppStackNav = createNativeStackNavigator();
+
+global.appID;
+init();
+
+function SurveysStack() {
+  return (
+    <SurveysStackNav.Navigator screenOptions={{ headerBackVisible: false }}>
+      <SurveysStackNav.Screen name="Entry Survey" component={EntrySurvey} />
+      <SurveysStackNav.Screen name="Exit Survey" component={ExitSurvey} />
+    </SurveysStackNav.Navigator>
+  );
+}
 
 function WorkoutScreenStack() {
   return (
@@ -103,57 +117,84 @@ function ProfileScreenStack() {
   );
 }
 
+function MainContentTab() {
+  return (
+    <TabNav.Navigator
+      initialRouteName="Workout"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === "Workout") {
+            iconName = "dumbbell";
+          } else if (route.name === "Stats") {
+            iconName = "chart-bar";
+          } else if (route.name === "Profile") {
+            iconName = "bullseye";
+          }
+
+          // You can return any component that you like here!
+          // return <Ionicons name={iconName} size={size} color={color} />;
+          return <FontAwesome5 name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "tomato",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
+      <TabNav.Screen
+        name="Profile"
+        component={ProfileScreenStack}
+        options={({ route }) => ({
+          title: "Your Goals",
+        })}
+      ></TabNav.Screen>
+      <TabNav.Screen
+        name="Workout"
+        component={WorkoutScreenStack}
+        options={({ route }) => ({
+          title: "Workout",
+          headerShown: false,
+        })}
+      ></TabNav.Screen>
+      <TabNav.Screen name="Stats" component={StatsScreenTab}></TabNav.Screen>
+    </TabNav.Navigator>
+  );
+}
+
 export default function App() {
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+  // Register background handler
+  messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    console.log("Message handled in the background!", remoteMessage);
+  });
+
   return (
     <>
       <StatusBar style="auto" />
       <AllWorkoutsDataProvider>
-        <NavigationContainer>
-          <TabNav.Navigator
-            initialRouteName="Workout"
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-
-                if (route.name === "Workout") {
-                  iconName = "dumbbell";
-                } else if (route.name === "Stats") {
-                  iconName = "chart-bar";
-                } else if (route.name === "Profile") {
-                  iconName = "bullseye";
-                }
-
-                // You can return any component that you like here!
-                // return <Ionicons name={iconName} size={size} color={color} />;
-                return (
-                  <FontAwesome5 name={iconName} size={size} color={color} />
-                );
-              },
-              tabBarActiveTintColor: "tomato",
-              tabBarInactiveTintColor: "gray",
-            })}
-          >
-            <TabNav.Screen
-              name="Profile"
-              component={ProfileScreenStack}
-              options={({ route }) => ({
-                title: "Your Goals",
-              })}
-            ></TabNav.Screen>
-            <TabNav.Screen
-              name="Workout"
-              component={WorkoutScreenStack}
-              options={({ route }) => ({
-                title: "Workout",
-                headerShown: false,
-              })}
-            ></TabNav.Screen>
-            <TabNav.Screen
-              name="Stats"
-              component={StatsScreenTab}
-            ></TabNav.Screen>
-          </TabNav.Navigator>
-        </NavigationContainer>
+        <GoalDataProvider>
+          <NavigationContainer ref={navigationRef}>
+            <AppStackNav.Navigator
+              screenOptions={{ headerShown: false }}
+              initialRouteName="MainContent"
+            >
+              <AppStackNav.Screen
+                name={"MainContent"}
+                component={MainContentTab}
+              />
+              <AppStackNav.Screen
+                name={"SurveyContent"}
+                component={SurveysStack}
+              />
+            </AppStackNav.Navigator>
+          </NavigationContainer>
+        </GoalDataProvider>
       </AllWorkoutsDataProvider>
     </>
   );

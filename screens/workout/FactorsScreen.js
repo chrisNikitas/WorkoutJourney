@@ -1,35 +1,97 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState, useContext } from "react";
-import { Button, FlatList, Pressable, StyleSheet, View } from "react-native";
+import { useState, useContext, useEffect } from "react";
+import {
+  Button,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+} from "react-native";
 import IconSelectionModal from "../../components/global/IconsModal";
 import FactorModal from "../../components/workout/FactorModal";
 import NewFactorModal from "../../components/workout/NewFactorModal";
-import allFactors from "../../data/FactorsList.json";
+// import allFactors from "../../data/FactorsList.json";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import MyButton from "../../components/global/MyButton";
+import * as LocalStore from "../../store/LocalStore";
+import globalStyle from "../../components/global/globalStyle";
 
 const FactorsScreen = ({ navigation }) => {
-  const [factorModalIsVisible, setFactorModalIsVisible] = useState(false);
-  const [newFactorModalIsVisible, setNewFactorModalIsVisible] = useState(false);
-  const [iconModalIsVisible, setIconModalIsVisible] = useState(false);
+  const [allFactors, setAllFactors] = useState([]);
   const [selectedFactor, setSelectedFactor] = useState({
     name: "",
     type: "",
   });
-  const [factors, setFactors] = useState([]);
+  const [factorData, setFactorData] = useState([]);
+
   const workoutDataContext = useContext(WorkoutDataContext);
+
+  const [factorModalIsVisible, setFactorModalIsVisible] = useState(false);
+  const [newFactorModalIsVisible, setNewFactorModalIsVisible] = useState(false);
+  const [iconModalIsVisible, setIconModalIsVisible] = useState(false);
+
+  useEffect(() => {
+    LocalStore.getData("factors").then((f) => {
+      setAllFactors(f);
+    });
+  }, []);
+
+  const removeFactor = (factorToRemove) => {
+    Alert.alert("Confirm", "Delete factor " + factorToRemove.name + "?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: () => {
+          const newAllFactors = allFactors.filter((f) => {
+            return f.name != factorToRemove.name;
+          });
+          setAllFactors(newAllFactors);
+          LocalStore.storeData("factors", newAllFactors);
+
+          if (isFactorDataAlreadyAdded(factorToRemove.name)) {
+            newFactors = factorData.filter((f) => {
+              return f.name != factorToRemove.name;
+            });
+            setFactorData(newFactors);
+            workoutDataContext.setWorkoutFactors(newFactors);
+          }
+        },
+      },
+    ]);
+  };
+
+  const addNewFactor = (newFactor) => {
+    //save to file
+    const newAllFactors = [...allFactors, newFactor];
+    setAllFactors(newAllFactors);
+    LocalStore.storeData("factors", newAllFactors);
+  };
+
+  const isFactorDataAlreadyAdded = (factorName) =>
+    factorData.some((f) => {
+      return f.name == factorName;
+    });
 
   function onPressNext() {
     navigation.navigate("NewWorkout");
   }
 
   function factorPress(props) {
-    console.log("Factor", props.name, "Press");
+    prevVal = isFactorDataAlreadyAdded(props.name)
+      ? factorData.filter((f) => f.name == props.name)[0].value
+      : null;
+
     setSelectedFactor({
       name: props.name,
       type: props.type,
       desc: props.desc,
       icon: props.icon,
+      prevVal: prevVal,
     });
     setFactorModalIsVisible(true);
   }
@@ -44,28 +106,31 @@ const FactorsScreen = ({ navigation }) => {
     } else if (selectedFactor["type"] == "bool") {
       newFactor = {
         ...selectedFactor,
-        value: "true",
+        value: factorVal,
       };
     }
     setSelectedFactor(newFactor);
 
     // add to factors, but remove if it already exists
-    newFactors = [...factors];
+    newFactors = [...factorData];
     newFactors = newFactors.filter((el) => {
-      console.log("EL ", el);
-      console.log("NF ", newFactor);
       return el["name"] != newFactor["name"];
     });
-    console.log("newFactors", newFactors);
+
     newFactors = [
       ...newFactors,
-      { name: newFactor["name"], value: newFactor["value"] },
+      {
+        name: newFactor["name"],
+        value: newFactor["value"],
+        type: newFactor["type"],
+        icon: newFactor["icon"],
+      },
     ];
-    setFactors(newFactors);
+    setFactorData(newFactors);
 
-    workoutDataContext.addFactors(newFactors);
+    workoutDataContext.setWorkoutFactors(newFactors);
     setFactorModalIsVisible(false);
-    // console.log(factors);
+    //
   };
 
   function renderFactor(itemData) {
@@ -78,9 +143,24 @@ const FactorsScreen = ({ navigation }) => {
         <Pressable
           style={{ flex: 1, justifyContent: "center" }}
           onPress={() => factorPress(props.itemData.item)}
+          onLongPress={() => removeFactor(props.itemData.item)}
         >
           <Ionicons name={props.itemData.item.icon} size={64}></Ionicons>
         </Pressable>
+        {isFactorDataAlreadyAdded(props.itemData.item.name) && (
+          <Ionicons
+            style={{
+              position: "absolute",
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(225, 225, 225, 0.9)",
+              borderRadius: 8,
+            }}
+            name={"checkmark"}
+            color={"tomato"}
+            size={30}
+          />
+        )}
         {/* <Text>{props.itemData.item.name}</Text> */}
       </View>
     );
@@ -96,6 +176,9 @@ const FactorsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.appContainer}>
+      <Text style={globalStyle.explanatoryText}>
+        Long press on a factor to remove it
+      </Text>
       <View style={styles.factors}>
         <FlatList
           numColumns={3}
@@ -140,6 +223,7 @@ const FactorsScreen = ({ navigation }) => {
       <NewFactorModal
         isVisible={newFactorModalIsVisible}
         setIsVisible={setNewFactorModalIsVisible}
+        addNewFactorProp={addNewFactor}
       />
       <IconSelectionModal
         onClose={toggleIcons}

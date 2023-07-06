@@ -6,21 +6,15 @@ export const AllWorkoutsDataContext = createContext(null);
 
 export default function AllWorkoutsDataProvider({ children }) {
   const [allWorkouts, setAllWorkouts] = useState([]);
-  // const [allWorkoutsRetrieved, setAllWorkoutsRetrieved] = useState(false);
   const allWorkoutsRetrieved = useRef(false);
 
   useEffect(() => {
     getAllWorkouts();
   }, []);
 
-  const test = () => {
-    console.log("Test Success, from allworkouts context");
-  };
-
   const addDummyWorkout = () => {
     let now = Date.now();
     let startTime = new Date(now - 1 * 60000);
-    console.log("Here");
     let endTime = new Date();
 
     workoutData = {
@@ -92,63 +86,51 @@ export default function AllWorkoutsDataProvider({ children }) {
 
     newAllWorkouts = [...allWorkouts, workoutData];
     setAllWorkouts(newAllWorkouts);
-    console.log("AllWorkouts", newAllWorkouts);
-    LocalStore.storeData("AllWorkouts", newAllWorkouts);
+
+    LocalStore.storeData("allWorkouts", newAllWorkouts);
   };
 
   const getAllWorkouts = async () => {
     if (!allWorkoutsRetrieved.current) {
       allWorkoutsRetrieved.current = true;
-      console.log("Non-Optimised first time retrieval");
-      data = LocalStore.getData("AllWorkouts");
+
+      data = LocalStore.getData("allWorkouts");
       data.then((v) => {
-        setAllWorkouts(v);
+        let toStore = v ? v : [];
+        console.log("AllWorkouts ", toStore);
+        setAllWorkouts(toStore);
       });
       return data;
     } else {
-      console.log("Optimised retrieval");
       return allWorkouts;
     }
   };
 
   const finishWorkout = (newWorkoutData) => {
-    console.log("From New");
     newAllWorkouts = [...allWorkouts, newWorkoutData];
     setAllWorkouts(newAllWorkouts);
 
-    // console.log("Workout Added!");
-    // console.log("First Workout:", newAllWorkouts[0]);
-
-    // workoutVol = 0;
-    // console.log("WO DAtra ", workoutData);
-    // workoutData["exerciseData"]["sets"].forEach((set) => {
-    //   console.log(set);
-    // });
-
-    LocalStore.storeData("AllWorkouts", newAllWorkouts);
-    console.log(newWorkoutData);
+    LocalStore.storeData("allWorkouts", newAllWorkouts);
   };
 
   const removeWorkout = (key) => {
     newAllWorkouts = allWorkouts.filter((wo) => wo.key !== key);
-    console.log("Old Workouts ", allWorkouts.length);
-    console.log("New Workouts ", newAllWorkouts.length);
     setAllWorkouts(newAllWorkouts);
-    LocalStore.storeData("AllWorkouts", newAllWorkouts);
+    LocalStore.storeData("allWorkouts", newAllWorkouts);
   };
 
   const removeAllData = () => {
-    console.log("Removing");
-    LocalStore.storeData("AllWorkouts", []);
+    LocalStore.storeData("allWorkouts", []);
     setAllWorkouts([{}]);
+  };
+  const test = () => {
+    console.log("test");
   };
 
   const value = {
-    test: test,
-
     finishWorkout: finishWorkout,
     addDummyWorkout: addDummyWorkout,
-
+    test: test,
     allWorkouts: allWorkouts,
     getAllWorkouts: getAllWorkouts,
 

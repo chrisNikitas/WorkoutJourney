@@ -7,7 +7,7 @@ import {
   Alert,
   Button,
 } from "react-native";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { DataTable } from "react-native-paper";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
@@ -18,13 +18,12 @@ export default function ExerciseTable(props) {
 
   const workoutDataContext = useContext(WorkoutDataContext);
 
-  console.log("Rendering Table");
+  const viewRef = useRef();
 
   const removeSetButton = (exIdx, setIdx) => {
     Alert.alert("Confirm", "Delete set " + (setIdx + 1) + "?", [
       {
         text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
       {
@@ -41,12 +40,10 @@ export default function ExerciseTable(props) {
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
         {
           text: "OK",
-          // onPress: () => console.log("OK pressed"),
           onPress: () => workoutDataContext.removeExercise(props.tableIdx),
         },
       ]
@@ -60,19 +57,28 @@ export default function ExerciseTable(props) {
   };
 
   return (
-    <View style={{ flex: 1, padding: 10 }}>
+    <View
+      ref={viewRef}
+      style={{ flex: 1, padding: 10 }}
+      onLayout={({ nativeEvent }) => {}}
+    >
       <Text style={{ fontSize: 12 }}>
-        Long press exercise name to remove it from your workout
+        Long press on the exercise name to remove it from your workout
       </Text>
-      <Button title="Press me" onPress={() => console.log("yo")}></Button>
       <DataTable style={styles.container}>
         <View style={styles.content}>
           <Pressable
+            android_ripple={{
+              color: "rgba(237, 237, 237, 0.553)",
+              borderless: true,
+            }}
             style={{
+              // backgroundColor: "rgba(237, 237, 237, 0.553)",
+              borderRadius: 6,
               flex: 1,
               flexDirection: "row",
-              // justifyContent: "center",
-              // alignItems: "center",
+              justifyContent: "center",
+              alignItems: "center",
             }}
             onLongPress={() => {
               removeExercise();
@@ -150,9 +156,9 @@ export default function ExerciseTable(props) {
                 <Pressable
                   style={{ flex: 1 }}
                   onPress={() => removeSetButton(props.tableIdx, i)}
-                  hitSlop={5}
+                  hitSlop={20}
                 >
-                  <Ionicons name="remove-circle" color={"grey"} />
+                  <Ionicons size={14} name="remove-circle" color={"darkred"} />
                 </Pressable>
               </DataTable.Cell>
             </DataTable.Row>
@@ -183,6 +189,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     flex: 1,
+    textAlign: "center",
   },
   inputContainer: {
     flexDirection: "row",
@@ -206,6 +213,7 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   plusIcon: {
+    // zIndex: 10000,
     color: "white",
     alignItems: "center",
     justifyContent: "center",

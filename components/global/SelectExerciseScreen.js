@@ -16,9 +16,7 @@ const SelectExerciseScreen = ({
 
   function addExercise(exercise) {
     navigation.navigate(route.params, exercise);
-    // onSelect(exercise);
   }
-  console.log("Back", route.params);
 
   function renderExerciseItem(itemData) {
     return (
@@ -31,12 +29,10 @@ const SelectExerciseScreen = ({
   function searchExercises(s) {
     setSearch(s);
     exercises = ["pullups", "pushups"];
-    console.log(Array.isArray(exercises));
     let res = allExerciseList.filter((ex) =>
       ex.name.toLowerCase().includes(s.toLowerCase())
     );
     setExerciseList(res);
-    // console.log(res);
   }
 
   return (

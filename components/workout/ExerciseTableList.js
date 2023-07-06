@@ -7,12 +7,10 @@ const MemoedTable = memo(ExerciseTable);
 
 const ExerciseTableList = () => {
   const workoutDataContext = useContext(WorkoutDataContext);
-  console.log("Here");
-  console.log(workoutDataContext.exerciseData);
+
   return (
     <ScrollView>
       {workoutDataContext.exerciseData.map((item, idx) => {
-        // console.log("This");
         return (
           <MemoedTable
             key={idx}
