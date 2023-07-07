@@ -43,7 +43,6 @@ export default function WorkoutDataProvider({ children }) {
     };
 
     // newAllWorkouts = [...allWorkouts, workoutData];
-    allWorkoutsDataContext.test();
     allWorkoutsDataContext.finishWorkout(workoutData);
 
     clearWorkout();
@@ -80,7 +79,6 @@ export default function WorkoutDataProvider({ children }) {
 
     newVolume = 0;
     newSets.forEach((set) => {
-      console.log(set);
       newVolume += set[0] * set[1];
     });
 

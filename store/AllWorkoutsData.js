@@ -97,7 +97,6 @@ export default function AllWorkoutsDataProvider({ children }) {
       data = LocalStore.getData("allWorkouts");
       data.then((v) => {
         let toStore = v ? v : [];
-        console.log("AllWorkouts ", toStore);
         setAllWorkouts(toStore);
       });
       return data;
@@ -123,14 +122,10 @@ export default function AllWorkoutsDataProvider({ children }) {
     LocalStore.storeData("allWorkouts", []);
     setAllWorkouts([{}]);
   };
-  const test = () => {
-    console.log("test");
-  };
 
   const value = {
     finishWorkout: finishWorkout,
     addDummyWorkout: addDummyWorkout,
-    test: test,
     allWorkouts: allWorkouts,
     getAllWorkouts: getAllWorkouts,
 

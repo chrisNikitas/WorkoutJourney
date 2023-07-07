@@ -30,7 +30,6 @@ export default function GoalDataProvider({ children }) {
       data = LocalStore.getData("goals");
       data.then((v) => {
         let toStore = v ? v : [];
-        console.log("Goals ", toStore);
         setGoals(toStore);
       });
       return data;

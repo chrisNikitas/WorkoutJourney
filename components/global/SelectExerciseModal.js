@@ -3,7 +3,7 @@ import { SearchBar } from "@rneui/themed";
 import { useState } from "react";
 import allExerciseList from "../../exercise_list/new_exercises.json";
 import ExerciseItem from "../workout/ExerciseItem";
-
+import MyButton from "./MyButton";
 const SelectExerciseModal = ({ isVisible, onSelect, onCancel }) => {
   const [search, setSearch] = useState("");
   const [exerciseList, setExerciseList] = useState(allExerciseList);
@@ -40,7 +40,7 @@ const SelectExerciseModal = ({ isVisible, onSelect, onCancel }) => {
           value={search}
           onChangeText={searchExercises}
         />
-        <Button title="Cancel" onPress={onCancel}></Button>
+        <MyButton title="Cancel" onPress={onCancel}></MyButton>
 
         <FlatList
           data={exerciseList}

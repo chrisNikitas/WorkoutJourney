@@ -92,12 +92,7 @@ export default function ProfileScreen() {
             <Text
               adjustsFontSizeToFit
               numberOfLines={2}
-              style={{
-                fontSize: 17,
-                padding: 15,
-                color: "#454545",
-                textAlign: "center",
-              }}
+              style={globalStyle.emptyPageText}
             >
               {
                 "Is there anything your are working to achieve? \nPopulate this screen with your training goals."

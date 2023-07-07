@@ -109,7 +109,6 @@ const EntrySurvey = () => {
   const submitSurvey = () => {
     if (!noEmptyFields()) return;
     // send to firebase
-    console.log("Sent!");
     let answers = {
       age: age,
       gender: gender,
@@ -129,7 +128,6 @@ const EntrySurvey = () => {
   };
 
   const onOpenPicker = (id) => {
-    console.log("Called");
     setOpenPicker(id);
   };
 

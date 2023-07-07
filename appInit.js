@@ -49,8 +49,6 @@ const scheduleNotification = async () => {
 const checkExitQuestionnaire = () => {
   // LocalStore.removeData("endDate");
   LocalStore.getData("endDate").then((v) => {
-    console.log();
-    console.log(Date.now());
     if (!v) {
       var endDate = new Date(Date.now() + 12096e5);
       LocalStore.storeData("endDate", endDate);

@@ -2,7 +2,7 @@ import { useEffect, useContext, useState, useCallback } from "react";
 import { FlatList, View, Button, Pressable, Alert, Text } from "react-native";
 // import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import ExerciseSummaryCard from "../../components/history/ExerciseSummaryCard.js";
-import { useIsFocused } from "@react-navigation/native";
+import globalStyle from "../../components/global/globalStyle.js";
 import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData.js";
 
 export default function HistoryScreen() {
@@ -56,12 +56,7 @@ export default function HistoryScreen() {
             <Text
               adjustsFontSizeToFit
               numberOfLines={2}
-              style={{
-                fontSize: 17,
-                padding: 15,
-                color: "#454545",
-                textAlign: "center",
-              }}
+              style={globalStyle.emptyPageText}
             >
               {"Populate this screen with your workouts"}
             </Text>

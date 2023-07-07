@@ -1,10 +1,9 @@
-import { StyleSheet, SafeAreaView, ScrollView, Text, View } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState, useContext } from "react";
-import { Button } from "@rneui/base";
-import { WorkoutDataContext } from "../../store/WorkoutData.js";
-import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData.js";
+import { useContext, useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import MyButton from "../../components/global/MyButton.js";
+import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData.js";
+import { WorkoutDataContext } from "../../store/WorkoutData.js";
+import globalStyle from "../../components/global/globalStyle.js";
 
 export default function WorkoutScreen({ navigation }) {
   const [workoutsLogged, setWorkoutsLogged] = useState(0);
@@ -25,10 +24,6 @@ export default function WorkoutScreen({ navigation }) {
     workoutDataContext.setStartTime(date);
   }
 
-  const addDummyWorkout = () => {
-    allWorkoutDataContext.addDummyWorkout();
-  };
-
   return (
     <SafeAreaView style={styles.appContainer}>
       <View style={styles.woCounterContainer}>
@@ -37,27 +32,15 @@ export default function WorkoutScreen({ navigation }) {
           <Text style={styles.woCounter}> {workoutsLogged} </Text>
           <Text> {"\nworkouts"}</Text>
         </Text>
+        {workoutsLogged == 0 && (
+          <Text style={[globalStyle.emptyPageText, { marginTop: 20 }]}>
+            Start by adding your first goal and logging your first workout
+          </Text>
+        )}
       </View>
       <View style={{ flex: 1 }}>
         <MyButton title="Start Workout" onPress={onStartWorkout}></MyButton>
       </View>
-      {/* <MyButton title="Add Dummy Workout" onPress={addDummyWorkout}></MyButton>
-      <MyButton
-        title="Remove All Data"
-        onPress={allWorkoutDataContext.removeAllData}
-      ></MyButton>
-      <MyButton
-        title={"To entry"}
-        onPress={() =>
-          navigation.navigate("SurveyContent", { screen: "EntrySurvey" })
-        }
-      />
-      <MyButton
-        title={"To Exit"}
-        onPress={() =>
-          navigation.navigate("SurveyContent", { screen: "ExitSurvey" })
-        }
-      /> */}
     </SafeAreaView>
   );
 }

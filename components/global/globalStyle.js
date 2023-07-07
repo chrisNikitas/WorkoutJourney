@@ -16,4 +16,10 @@ export default StyleSheet.create({
     marginLeft: 20,
     marginBottom: 5,
   },
+  emptyPageText: {
+    fontSize: 17,
+    padding: 15,
+    color: "#454545",
+    textAlign: "center",
+  },
 });

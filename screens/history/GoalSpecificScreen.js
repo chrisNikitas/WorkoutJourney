@@ -1,4 +1,13 @@
-import { Button, View, StyleSheet, Text, FlatList } from "react-native";
+import {
+  Button,
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  Pressable,
+} from "react-native";
+import FloatingCollapsible from "../../components/global/FloatingCollapsible";
+
 import { useState, useContext, useEffect, useRef } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import * as LocalStore from "../../store/LocalStore";
@@ -26,6 +35,8 @@ const GoalSpecificScreen = () => {
 
   const [allWorkouts, setAllWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [helpView, setHelpView] = useState(false);
+
   // const [goalsLoading, setGoalsLoading] = useState(true);
 
   // const workoutDataContext = useContext(WorkoutDataContext);
@@ -43,13 +54,10 @@ const GoalSpecificScreen = () => {
         setGoals(gs);
 
         if (gs.length == 0) {
-          console.log("No Goals");
           noGoals.current = true;
           setSelectedGoalIndex(-1);
           setSelectedGoal({});
         } else {
-          console.log("Yes Goals");
-
           noGoals.current = false;
 
           setSelectedGoalIndex(0);
@@ -95,8 +103,7 @@ const GoalSpecificScreen = () => {
             setLoading(false);
           })
           .catch((error) => {
-            console.log();
-            ("ERROR in gsg effect");
+            console.log("ERROR in gsg effect");
             console.error(error);
           });
       })
@@ -116,14 +123,10 @@ const GoalSpecificScreen = () => {
       selectedGoalIndex == -1 ||
       allWorkouts.length == 0
     ) {
-      console.log("No Pie Chart");
       setPieChartData([]);
       return;
     }
-    console.log("Yes Pie Chart");
     pieChartDataVar = allWorkouts[index]["exerciseData"].map((exData, i) => {
-      console.log("ExData: ", exData);
-      console.log("SelectedGoal: ", selectedGoal);
       return {
         x: exData.exerciseName,
         y: exData.volume,
@@ -147,6 +150,22 @@ const GoalSpecificScreen = () => {
   if (loading == false) {
     return (
       <>
+        <FloatingCollapsible
+          title={"Help?"}
+          expandedViewContent={
+            <Text style={styles.explanatoryText}>
+              <Text>
+                This graph can help you understand how much you are training for
+                each of your goals {"\n\n"}
+              </Text>
+              The <Text style={{ fontWeight: 700 }}>Volume</Text> is calculated
+              by multiplying the weight with the number of sets and repetitions.{" "}
+              {"\n"}
+              <Text style={{ fontWeight: 700 }}>Specific Volume</Text>, is
+              volume that helps you achieve your selected goal.
+            </Text>
+          }
+        />
         <View
           style={{
             // flexDirection: "row",

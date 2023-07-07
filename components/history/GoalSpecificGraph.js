@@ -9,9 +9,10 @@ import {
 } from "victory-native";
 
 import { GoalDataContext } from "../../store/GoalData";
-import { View, ScrollView, Text, StyleSheet } from "react-native";
+import { View, ScrollView, Text, StyleSheet, Pressable } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { similarityOfExercises } from "./specificityCalculation/specificityCalculation";
+import Collapsible from "react-native-collapsible";
 
 const GoalSpecificGraph = ({
   data,
@@ -22,40 +23,11 @@ const GoalSpecificGraph = ({
   noGoals,
   onBarPressProp,
 }) => {
-  // const [pieChartData, setPieChartData] = useState([]);
-  // const [pieChartVis, setPieChartVis] = useState(false);
   const [selectedBar, setSelectedBar] = useState(-1);
   const [barWidth, setBarWidth] = useState(20);
+  const [helpView, setHelpView] = useState(false);
 
   const goalDataContext = useContext(GoalDataContext);
-
-  // useEffect(() => {
-  //   console.log("Goal Index: ", selectedGoalIndex);
-  //   console.log("Goal:       ", selectedGoal);
-  //   plotSingleWorkoutGraph(selectedBar);
-  // }, [selectedGoal, goalDataContext.goals]);
-
-  // const plotSingleWorkoutGraph = (index) => {
-  //   if (noGoals.current || index == -1 || selectedGoalIndex == -1) {
-  //     console.log("No Pie Chart");
-  //     setPieChartData([]);
-  //     setPieChartVis(false);
-  //     return;
-  //   }
-  //   console.log("No Pie Chart");
-
-  //   pieChartDataVar = data[index]["exerciseData"].map((exData, i) => {
-  //     console.log("ExData: ", exData);
-  //     return {
-  //       x: exData.exerciseName,
-  //       y: exData.volume,
-  //       colorIntensity: similarityOfExercises(selectedGoal, exData.exercise),
-  //     };
-  //   });
-
-  //   setPieChartData(pieChartDataVar);
-  //   setPieChartVis(true);
-  // };
 
   const onBarPress = () => {
     return [
@@ -63,7 +35,6 @@ const GoalSpecificGraph = ({
         target: "data",
         mutation: (props) => {
           let index = props.datum.x - 1;
-          // plotSingleWorkoutGraph(index);
 
           setSelectedBar(index);
           onBarPressProp(index);
@@ -115,17 +86,9 @@ const GoalSpecificGraph = ({
             backgroundColor: "lightgrey",
             borderRadius: 5,
             marginHorizontal: 5,
+            marginTop: 5,
           }}
         >
-          <Text style={styles.explanatoryText}>
-            This graph can help you understand how much you are training for
-            each of your goals {"\n\n"}
-            The <Text style={{ fontWeight: 700 }}>Volume</Text> is calculated by
-            multiplying the weight with the number of sets and repetitions.{" "}
-            {"\n"}
-            <Text style={{ fontWeight: 700 }}>Specific Volume</Text>, is volume
-            that helps you achieve your selected goal.
-          </Text>
           <VictoryChart
             domainPadding={{ x: [20, 20] }}
             padding={{ bottom: 80, top: 40, left: 59, right: 30 }}
@@ -244,8 +207,16 @@ const GoalSpecificGraph = ({
             view a breakdown
           </Text>
         </View>
-
-        <GoalSpecificPieChart></GoalSpecificPieChart>
+        <View
+          style={{
+            backgroundColor: "lightgrey",
+            borderRadius: 5,
+            marginHorizontal: 5,
+            marginTop: 5,
+          }}
+        >
+          <GoalSpecificPieChart></GoalSpecificPieChart>
+        </View>
       </ScrollView>
     </>
   );
@@ -263,7 +234,7 @@ const styles = StyleSheet.create({
     // textShadowOffset: {width: -1, height: 1},
     // letterSpacing: 0.1,
     // lineHeight: 15,
-    // fontSize: 17,
+    fontSize: 16,
   },
 });
 export default GoalSpecificGraph;

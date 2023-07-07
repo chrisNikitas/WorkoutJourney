@@ -9,6 +9,7 @@ import {
   Text,
   Alert,
 } from "react-native";
+import FloatingCollapsible from "../../components/global/FloatingCollapsible";
 import IconSelectionModal from "../../components/global/IconsModal";
 import FactorModal from "../../components/workout/FactorModal";
 import NewFactorModal from "../../components/workout/NewFactorModal";
@@ -176,6 +177,19 @@ const FactorsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.appContainer}>
+      <FloatingCollapsible
+        floatingButtonStyle={{ bottom: 90 }}
+        title={"Help?"}
+        expandedViewContent={
+          <Text style={{ textAlign: "auto", padding: 8 }}>
+            Here you can add factors that could be affecting your workout.
+            {"\n\n"}
+            Not sure if something is affecting your workout? Add it as a new
+            factor and see if your performance is affected by it
+          </Text>
+        }
+      />
+
       <Text style={globalStyle.explanatoryText}>
         Long press on a factor to remove it
       </Text>
