@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import FloatingCollapsible from "../../components/global/FloatingCollapsible";
-
+import globalStyle from "../../components/global/globalStyle";
 import { useState, useContext, useEffect, useRef } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import * as LocalStore from "../../store/LocalStore";
@@ -147,7 +147,7 @@ const GoalSpecificScreen = () => {
     setSelectedGoal(goals[i].exercise);
   };
 
-  if (loading == false) {
+  if (loading == false && allWorkouts.length != 0 && goals.length != 0) {
     return (
       <>
         <FloatingCollapsible
@@ -170,7 +170,7 @@ const GoalSpecificScreen = () => {
           style={{
             // flexDirection: "row",
             marginBottom: 5,
-            backgroundColor: "grey",
+            backgroundColor: "rgba(176, 176, 176, 1)",
             padding: 5,
             borderBottomRightRadius: 4,
             borderBottomLeftRadius: 4,
@@ -181,7 +181,7 @@ const GoalSpecificScreen = () => {
             style={{
               padding: 10,
               fontSize: 18,
-              color: "white",
+              color: "black",
               fontWeight: "700",
               // textAlign: "center",
             }}
@@ -216,7 +216,21 @@ const GoalSpecificScreen = () => {
         />
       </>
     );
-  }
+  } else
+    return (
+      <>
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <Text
+            adjustsFontSizeToFit
+            numberOfLines={2}
+            style={globalStyle.emptyPageText}
+          >
+            {"Add at least one goal and one workout to reveal this page"}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }} />
+      </>
+    );
 };
 
 styles = StyleSheet.create({

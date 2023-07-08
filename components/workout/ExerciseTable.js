@@ -6,6 +6,7 @@ import {
   Pressable,
   Alert,
   Button,
+  Keyboard,
 } from "react-native";
 import { useState, useContext, useEffect, useRef } from "react";
 import { DataTable } from "react-native-paper";
@@ -121,7 +122,10 @@ export default function ExerciseTable(props) {
                 name={"plus"}
                 iconStyle={styles.plusIcon}
                 backgroundColor="black"
-                onPress={addSet}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  addSet();
+                }}
               />
             </View>
           </View>

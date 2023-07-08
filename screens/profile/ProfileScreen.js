@@ -1,34 +1,12 @@
-import {
-  Text,
-  Button,
-  View,
-  Modal,
-  Pressable,
-  TextInput,
-  StyleSheet,
-  FlatList,
-  KeyboardAvoidingView,
-  ScrollView,
-} from "react-native";
-import { useState, useEffect, useContext } from "react";
-import CancelButton from "../../components/global/CancelButton";
-import SelectExerciseModal from "../../components/global/SelectExerciseModal";
-import * as LocalStore from "../../store/LocalStore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import GoalItem from "../../components/profile/GoalItem";
+import { useContext, useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import MyButton from "../../components/global/MyButton";
 import globalStyle from "../../components/global/globalStyle";
+import GoalItem from "../../components/profile/GoalItem";
 import { GoalDataContext } from "../../store/GoalData";
 
-export default function ProfileScreen() {
-  const [addGoalModalIsVisible, setAddGoalModalIsVisible] = useState(false);
-  const [exerciseScreenModalIsVisible, setExerciseScreenModalIsVisible] =
-    useState(false);
+export default function ProfileScreen({ navigation, route }) {
   const [goals, setGoals] = useState([]);
-  const [goalExercise, setGoalExercise] = useState(null);
-  const [goalReps, setGoalReps] = useState("");
-  const [goalSets, setGoalSets] = useState("");
-  const [goalWeight, setGoalWeight] = useState("");
 
   const goalDataContext = useContext(GoalDataContext);
 
@@ -38,31 +16,8 @@ export default function ProfileScreen() {
     });
   }, [goalDataContext.goals]);
 
-  const addGoal = () => {
-    newGoal = {
-      exercise: goalExercise,
-      reps: goalReps,
-      sets: goalSets,
-      weight: goalWeight,
-    };
-    goalDataContext.addGoal(newGoal);
-    toggleAddGoalScreenModal();
-  };
-
   const removeGoal = (goal) => {
     goalDataContext.removeGoal(goal);
-  };
-
-  const toggleAddGoalScreenModal = () => {
-    setAddGoalModalIsVisible(!addGoalModalIsVisible);
-  };
-  function toggleExerciseScreenModal() {
-    setExerciseScreenModalIsVisible(!exerciseScreenModalIsVisible);
-  }
-
-  const onExerciseSelect = (exercise) => {
-    setExerciseScreenModalIsVisible(false);
-    setGoalExercise(exercise);
   };
 
   const MainContent = () => {
@@ -108,99 +63,10 @@ export default function ProfileScreen() {
   return (
     <>
       <MainContent />
-      <MyButton title="Add a goal" onPress={toggleAddGoalScreenModal} />
-
-      <Modal
-        style={styles.modalContainer}
-        animationType="slide"
-        visible={addGoalModalIsVisible}
-      >
-        <View style={styles.mainContent}>
-          <View style={styles.textContainer}>
-            <Pressable
-              style={[
-                styles.selectExercise,
-                goalExercise == null ? styles.input_empty : styles.input_filled,
-              ]}
-              onPress={toggleExerciseScreenModal}
-            >
-              <Text
-                style={{
-                  fontSize: 25,
-                  fontWeight: 500,
-                  color: goalExercise == null ? "#4e4e4e" : "black",
-                  textTransform: "capitalize",
-                }}
-              >
-                {goalExercise == null ? "Select Exercise" : goalExercise.name}
-              </Text>
-            </Pressable>
-            <View style={styles.input}>
-              <Text style={styles.inputText}>
-                Add the number of reps you want to achieve
-              </Text>
-              <TextInput
-                style={[
-                  styles.inputValue,
-                  goalReps == "" ? styles.input_empty : styles.input_filled,
-                ]}
-                value={goalReps}
-                placeholder="reps"
-                keyboardType="numeric"
-                onChangeText={setGoalReps}
-              />
-            </View>
-            <View style={styles.input}>
-              <Text style={styles.inputText}>
-                Add the number of sets you want to achieve
-              </Text>
-              <TextInput
-                style={[
-                  styles.inputValue,
-                  goalSets == "" ? styles.input_empty : styles.input_filled,
-                ]}
-                placeholder="sets"
-                keyboardType="numeric"
-                value={goalSets}
-                onChangeText={setGoalSets}
-              />
-            </View>
-            <View style={styles.input}>
-              <Text style={styles.inputText}>Add your goal weight</Text>
-              <TextInput
-                value={goalWeight}
-                style={[
-                  styles.inputValue,
-                  goalWeight == "" ? styles.input_empty : styles.input_filled,
-                ]}
-                placeholder="kg"
-                keyboardType="numeric"
-                onChangeText={setGoalWeight}
-              />
-            </View>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button
-              disabled={
-                goalReps != "" &&
-                goalSets != "" &&
-                goalWeight != "" &&
-                goalExercise != null
-                  ? false
-                  : true
-              }
-              title={"Add"}
-              onPress={addGoal}
-            />
-            <CancelButton callback={toggleAddGoalScreenModal} />
-          </View>
-        </View>
-        <SelectExerciseModal
-          isVisible={exerciseScreenModalIsVisible}
-          onCancel={toggleExerciseScreenModal}
-          onSelect={onExerciseSelect}
-        />
-      </Modal>
+      <MyButton
+        title="Add a goal"
+        onPress={() => navigation.navigate("NewGoalScreen")}
+      />
     </>
   );
 }

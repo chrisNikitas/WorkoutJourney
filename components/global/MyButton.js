@@ -1,22 +1,24 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 
-const defaultButton = {
-  marginHorizontal: 3,
-  alignItems: "center",
-  justifyContent: "center",
-  paddingVertical: 12,
-  paddingHorizontal: 32,
-  borderRadius: 5,
-  elevation: 3,
-  backgroundColor: "black",
-};
-
 const MyButton = ({
   title,
   onPress,
   containerStyle,
   rippleColor = "tomato",
+  disabled = false,
 }) => {
+  const defaultButton = {
+    marginHorizontal: 3,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 5,
+    elevation: 3,
+    backgroundColor: disabled ? "lightgrey" : "black",
+    margin: 5,
+  };
+
   button = {
     ...defaultButton,
     ...containerStyle,
@@ -24,6 +26,7 @@ const MyButton = ({
 
   return (
     <Pressable
+      disabled={disabled}
       android_ripple={{ color: rippleColor }}
       style={button}
       onPress={onPress}

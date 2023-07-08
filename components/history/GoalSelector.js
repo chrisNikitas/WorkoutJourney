@@ -3,10 +3,11 @@ import globalStyle from "../global/globalStyle";
 const GoalSelector = ({ goalName, goalIndex, onSelect, selected }) => {
   return (
     <View style={styles.container}>
-      <Pressable style={globalStyle.button} onPress={() => onSelect(goalIndex)}>
-        <Text style={[styles.text, selected ? styles.selected : null]}>
-          {goalName}
-        </Text>
+      <Pressable
+        style={[styles.button, , selected ? styles.selected : null]}
+        onPress={() => onSelect(goalIndex)}
+      >
+        <Text style={styles.text}>{goalName}</Text>
       </Pressable>
     </View>
   );
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 5,
     elevation: 3,
-    backgroundColor: "black",
+    backgroundColor: "grey",
   },
   text: {
     flexWrap: "nowrap",
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: "white",
   },
-  selected: { color: "tomato" },
+  selected: { backgroundColor: "black" },
 });
 
 export default GoalSelector;

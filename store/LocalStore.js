@@ -12,7 +12,7 @@ export const storeData = async (key, value) => {
       .app()
       .database(databaseURL)
       .ref(rootDatabasePath + key)
-      .set(jsonValue);
+      .set(value);
     console.log("Storing");
   } catch (e) {
     // saving error

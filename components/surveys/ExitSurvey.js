@@ -9,9 +9,11 @@ import { Text, TextInput, useTheme } from "react-native-paper";
 import DropDownPicker from "react-native-dropdown-picker";
 import MyButton from "../global/MyButton";
 import { Slider } from "@miblanchard/react-native-slider";
+import * as RootNavigation from "../../RootNavigation";
+
 import * as LocalStore from "../../store/LocalStore";
 
-const ExitSurvey = () => {
+const ExitSurvey = ({ navigation }) => {
   const [openPicker, setOpenPicker] = useState(null);
 
   const [features, setFeatures] = useState([
@@ -79,7 +81,9 @@ const ExitSurvey = () => {
     };
     LocalStore.storeData("exitQuestionnaire", answers);
     LocalStore.storeData("exitQuestionnaireDone", true);
+
     console.log("Sent!");
+    RootNavigation.navigate("MainContent");
   };
 
   const addSUSValue = (value, index) => {

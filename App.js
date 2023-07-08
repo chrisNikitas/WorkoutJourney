@@ -1,9 +1,14 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { navigationRef } from "./RootNavigation";
+import { createStackNavigator } from "@react-navigation/stack";
+
 import { useEffect } from "react";
 
 import { StatusBar } from "expo-status-bar";
@@ -13,9 +18,13 @@ import HistoryScreen from "./screens/history/HistoryScreen";
 import ProfileScreen from "./screens/profile/ProfileScreen";
 import WorkoutScreen from "./screens/workout/StartWorkoutScreen";
 
+import NewGoalScreen from "./screens/profile/NewGoalScreen";
 import SelectExerciseScreen from "./components/global/SelectExerciseScreen";
 import FactorsScreen from "./screens/workout/FactorsScreen";
 import NewWorkoutScreen from "./screens/workout/NewWorkoutScreen";
+
+import FactorModal from "./components/workout/FactorModal";
+import NewFactorModal from "./components/workout/NewFactorModal";
 
 import AllWorkoutsDataProvider from "./store/AllWorkoutsData";
 import WorkoutDataProvider from "./store/WorkoutData.js";
@@ -41,11 +50,17 @@ const AppStackNav = createNativeStackNavigator();
 global.appID;
 init();
 
+const getTabBarVisibility = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route);
+  const hideOnScreens = ["NewGoalScreen"]; // put here name of screen where you want to hide tabBar
+  return hideOnScreens.indexOf(routeName) <= -1;
+};
+
 function SurveysStack() {
   return (
     <SurveysStackNav.Navigator screenOptions={{ headerBackVisible: false }}>
-      <SurveysStackNav.Screen name="Entry Survey" component={EntrySurvey} />
-      <SurveysStackNav.Screen name="Exit Survey" component={ExitSurvey} />
+      <SurveysStackNav.Screen name="EntrySurvey" component={EntrySurvey} />
+      <SurveysStackNav.Screen name="ExitSurvey" component={ExitSurvey} />
     </SurveysStackNav.Navigator>
   );
 }
@@ -62,21 +77,39 @@ function WorkoutScreenStack() {
           options={{ headerTitle: "Workout" }}
           component={WorkoutScreen}
         />
-        <WorkoutScreenStackNav.Screen
-          options={{ headerTitle: "Add your factors" }}
-          name="Factors"
-          component={FactorsScreen}
-        />
+        <WorkoutScreenStackNav.Group>
+          <WorkoutScreenStackNav.Screen
+            options={{ headerTitle: "Add your factors" }}
+            name="Factors"
+            component={FactorsScreen}
+          />
+          <WorkoutScreenStackNav.Screen
+            options={{
+              headerTitle: "Add factor",
+              animation: "slide_from_bottom",
+            }}
+            name="FactorModal"
+            component={FactorModal}
+          />
+          <WorkoutScreenStackNav.Screen
+            options={{
+              headerTitle: "Add new factor",
+              animation: "slide_from_bottom",
+            }}
+            name="NewFactorModal"
+            component={NewFactorModal}
+          />
+        </WorkoutScreenStackNav.Group>
         <WorkoutScreenStackNav.Screen
           options={{ headerTitle: "Current Workout" }}
           name="NewWorkout"
           component={NewWorkoutScreen}
         />
-        <WorkoutScreenStackNav.Screen
+        {/* <WorkoutScreenStackNav.Screen
           options={{ headerTitle: "Select Exercise" }}
           name="SelectExerciseScreen"
           component={SelectExerciseScreen}
-        />
+        /> */}
       </WorkoutScreenStackNav.Navigator>
     </WorkoutDataProvider>
   );
@@ -105,13 +138,21 @@ function StatsScreenTab() {
 function ProfileScreenStack() {
   return (
     <ProfileScreenStackNav.Navigator
-      screenOptions={{ animation: "slide_from_right", headerShown: false }}
-      initialRouteName="GoalsScreen"
+      screenOptions={{
+        animation: "slide_from_right",
+        headerShown: true,
+      }}
+      initialRouteName="ProfileScreen"
     >
       <ProfileScreenStackNav.Screen
         name="ProfileScreen"
-        options={{ headerTitle: "Your Gosals" }}
+        options={{ headerTitle: "Your Goals" }}
         component={ProfileScreen}
+      />
+      <ProfileScreenStackNav.Screen
+        name="NewGoalScreen"
+        options={{ headerTitle: "Add Goal", animation: "slide_from_bottom" }}
+        component={NewGoalScreen}
       />
     </ProfileScreenStackNav.Navigator>
   );
@@ -122,6 +163,7 @@ function MainContentTab() {
     <TabNav.Navigator
       initialRouteName="Workout"
       screenOptions={({ route }) => ({
+        tabBarStyle: { display: getTabBarVisibility(route) ? "flex" : "none" },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -145,6 +187,7 @@ function MainContentTab() {
         name="Profile"
         component={ProfileScreenStack}
         options={({ route }) => ({
+          headerShown: false,
           title: "Your Goals",
         })}
       ></TabNav.Screen>
@@ -181,16 +224,27 @@ export default function App() {
         <GoalDataProvider>
           <NavigationContainer ref={navigationRef}>
             <AppStackNav.Navigator
-              screenOptions={{ headerShown: false }}
+              // screenOptions={{ headerShown: false }}
               initialRouteName="MainContent"
             >
               <AppStackNav.Screen
+                options={{ headerShown: false }}
                 name={"MainContent"}
                 component={MainContentTab}
               />
               <AppStackNav.Screen
+                options={{ headerShown: false }}
                 name={"SurveyContent"}
                 component={SurveysStack}
+              />
+              <AppStackNav.Screen
+                options={{
+                  headerTitle: "Select Exercise",
+                  headerShown: true,
+                  animation: "slide_from_bottom",
+                }}
+                name="SelectExerciseScreen"
+                component={SelectExerciseScreen}
               />
             </AppStackNav.Navigator>
           </NavigationContainer>

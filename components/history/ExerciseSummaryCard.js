@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   },
   factorSummaryContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
   },
   factorSummary: {
     padding: 1,
@@ -90,8 +91,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     justifyContent: "center",
     flexDirection: "row",
-
+    width: "20%",
     marginRight: 5,
+    marginBottom: 5,
   },
   factorIcon: { padding: 2 },
   factorValue: {
@@ -100,6 +102,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     textAlign: "center",
     padding: 2,
+    width: "30%",
   },
 });
 

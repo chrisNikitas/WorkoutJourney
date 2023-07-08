@@ -12,10 +12,12 @@ export default function WorkoutScreen({ navigation }) {
   const allWorkoutDataContext = useContext(AllWorkoutsDataContext);
 
   useEffect(() => {
+    // setTimeout(() => {
     allWorkoutDataContext.getAllWorkouts().then((v) => {
       if (v) setWorkoutsLogged(v.length);
       else setWorkoutsLogged(0);
     });
+    // }, 1000);
   }, [allWorkoutDataContext.allWorkouts]);
 
   function onStartWorkout() {

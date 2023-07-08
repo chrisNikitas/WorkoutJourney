@@ -11,10 +11,11 @@ import messaging from "@react-native-firebase/messaging";
 const init = async () => {
   try {
     initAppUUID();
-    checkEntryQuestionnaire();
     checkExitQuestionnaire();
+    checkEntryQuestionnaire();
     initInitialFactors();
     registerForPushNotificationsAsync();
+
     // LocalStore.clearAll();
   } catch (e) {
     // handle error
@@ -34,25 +35,26 @@ const checkEntryQuestionnaire = () => {
   });
 };
 
-const scheduleNotification = async () => {
-  // var t = new Date();
-  // t.setMinutes(t.getMinutes() + 2);
-  // Notifications.scheduleNotificationAsync({
-  //   content: {
-  //     title: "Look at that notification",
-  //     body: "10 minutes",
-  //   },
-  //   trigger: t,
-  // });
-};
-
 const checkExitQuestionnaire = () => {
   // LocalStore.removeData("endDate");
   LocalStore.getData("endDate").then((v) => {
     if (!v) {
-      var endDate = new Date(Date.now() + 12096e5);
-      LocalStore.storeData("endDate", endDate);
-    } else if (Date.now() > new Date(v).getTime()) {
+      var endDate = new Date(Date.now() + 12096e5); //2 weeks
+      // var endDate = new Date(Date.now() + 60000); // 1 minute
+
+      LocalStore.storeData("endDate", JSON.stringify(endDate));
+      return;
+    }
+    v = JSON.parse(v);
+
+    if (Date.now() > new Date(v).getTime()) {
+      LocalStore.getData("exitQuestionnaireDone").then(
+        (exitQuestionnaireDone) => {
+          if (exitQuestionnaireDone) return;
+          else
+            RootNavigation.navigate("SurveyContent", { screen: "ExitSurvey" });
+        }
+      );
       console.log("Study Ended");
     } else if (Date.now() < new Date(v).getTime()) {
       console.log("Within Study Time");
@@ -95,14 +97,14 @@ const initInitialFactors = async () => {
   }
 };
 
-const initAppUUID = () => {
+const initAppUUID = async () => {
   LocalStore.getData("appID").then((id) => {
     if (id == null) {
       // first time opening app
       console.log("Creating first time id");
-      LocalStore.storeData("appID", uuid.v1()).then((newId) => {
-        global.appID = newId;
-      });
+      newId = uuid.v1();
+      global.appID = newId;
+      LocalStore.storeData("appID", newId);
     } else {
       global.appID = id;
     }

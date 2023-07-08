@@ -19,7 +19,7 @@ import MyButton from "../../components/global/MyButton";
 import * as LocalStore from "../../store/LocalStore";
 import globalStyle from "../../components/global/globalStyle";
 
-const FactorsScreen = ({ navigation }) => {
+const FactorsScreen = ({ navigation, route }) => {
   const [allFactors, setAllFactors] = useState([]);
   const [selectedFactor, setSelectedFactor] = useState({
     name: "",
@@ -29,7 +29,6 @@ const FactorsScreen = ({ navigation }) => {
 
   const workoutDataContext = useContext(WorkoutDataContext);
 
-  const [factorModalIsVisible, setFactorModalIsVisible] = useState(false);
   const [newFactorModalIsVisible, setNewFactorModalIsVisible] = useState(false);
   const [iconModalIsVisible, setIconModalIsVisible] = useState(false);
 
@@ -38,6 +37,12 @@ const FactorsScreen = ({ navigation }) => {
       setAllFactors(f);
     });
   }, []);
+
+  useEffect(() => {
+    if (route.params) {
+      addFactorData(route.params.factorVal);
+    }
+  }, [route.params]);
 
   const removeFactor = (factorToRemove) => {
     Alert.alert("Confirm", "Delete factor " + factorToRemove.name + "?", [
@@ -94,10 +99,17 @@ const FactorsScreen = ({ navigation }) => {
       icon: props.icon,
       prevVal: prevVal,
     });
-    setFactorModalIsVisible(true);
+    navigation.navigate("FactorModal", {
+      name: props.name,
+      type: props.type,
+      desc: props.desc,
+      icon: props.icon,
+      prevVal: prevVal,
+    });
   }
 
   const addFactorData = (factorVal = -1) => {
+    console.log("adding factor");
     // newFactor
     if (selectedFactor["type"] == "1-5") {
       newFactor = {
@@ -130,7 +142,7 @@ const FactorsScreen = ({ navigation }) => {
     setFactorData(newFactors);
 
     workoutDataContext.setWorkoutFactors(newFactors);
-    setFactorModalIsVisible(false);
+    // setFactorModalIsVisible(false);
     //
   };
 
@@ -228,12 +240,12 @@ const FactorsScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <FactorModal
+      {/* <FactorModal
         isVisible={factorModalIsVisible}
         setIsVisible={setFactorModalIsVisible}
         selectedFactor={selectedFactor}
         addFactorData={addFactorData}
-      />
+      /> */}
       <NewFactorModal
         isVisible={newFactorModalIsVisible}
         setIsVisible={setNewFactorModalIsVisible}
