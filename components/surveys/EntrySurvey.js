@@ -118,7 +118,9 @@ const EntrySurvey = () => {
       q3: q3,
       q4: q4,
       q5: q5,
+      q5Other: q5Other,
       q6: q6,
+      q6Other: q6Other,
       q7: q7,
       q8: q8,
     };

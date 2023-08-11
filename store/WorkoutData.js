@@ -52,6 +52,10 @@ export default function WorkoutDataProvider({ children }) {
     setFactorData(factors);
   }
 
+  function getWorkoutFactors() {
+    return factorData;
+  }
+
   function addExercise(exercise) {
     newExerciseData = (currentExerciseData) => [
       ...currentExerciseData,
@@ -79,7 +83,9 @@ export default function WorkoutDataProvider({ children }) {
 
     newVolume = 0;
     newSets.forEach((set) => {
-      newVolume += set[0] * set[1];
+      let weight = set[0] == 0 ? 1 : set[0];
+      let reps = set[1];
+      newVolume += weight * reps;
     });
 
     newExerciseData = exerciseData.map((v, i) => {
@@ -123,6 +129,7 @@ export default function WorkoutDataProvider({ children }) {
     addSet: addSet,
     addExercise: addExercise,
     setWorkoutFactors: setWorkoutFactors,
+    getWorkoutFactors: getWorkoutFactors,
     removeSet: removeSet,
     removeExercise: removeExercise,
     setStartTime: setStartTime,

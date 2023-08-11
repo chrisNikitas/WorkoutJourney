@@ -128,7 +128,8 @@ const GoalSpecificScreen = () => {
     }
     pieChartDataVar = allWorkouts[index]["exerciseData"].map((exData, i) => {
       return {
-        x: exData.exerciseName,
+        x: i + 1,
+        exNames: exData.exerciseName,
         y: exData.volume,
         colorIntensity: similarityOfExercises(selectedGoal, exData.exercise),
       };
@@ -153,36 +154,45 @@ const GoalSpecificScreen = () => {
         <FloatingCollapsible
           title={"Help?"}
           expandedViewContent={
-            <Text style={styles.explanatoryText}>
-              <Text>
-                This graph can help you understand how much you are training for
-                each of your goals {"\n\n"}
-              </Text>
-              The <Text style={{ fontWeight: 700 }}>Volume</Text> is calculated
-              by multiplying the weight with the number of sets and repetitions.{" "}
+            <Text>
+              The first grapsh shows you how much training volume you've done in
+              your workouts.
               {"\n"}
-              <Text style={{ fontWeight: 700 }}>Specific Volume</Text>, is
-              volume that helps you achieve your selected goal.
+              {"\u2022 "}The{" "}
+              <Text style={{ fontWeight: 700 }}>Total Volume</Text> is
+              calculated by multiplying the weight by the number of sets and
+              repetitions of all exercises in a session. {"\n"}
+              {"\u2022 "}
+              <Text style={{ fontWeight: 700 }}>Specific Volume</Text> is
+              training volume that directly helps you achieve your selected
+              goal. This is calculated by looking at which muscles require
+              development for your goals and which muscles each exercise works.
+              {"\n\n"}
+              Once you tap on any of the bars the
+              <Text style={{ fontWeight: 700 }}> pie chart</Text> appears. This
+              shows all the exercises performed in that session.
+              {"\n"}
+              {"\u2022 "}The <Text style={{ fontWeight: 700 }}>area</Text> shows
+              the volume of each exercise.
+              {"\n"}
+              {"\u2022 "}The{" "}
+              <Text style={{ fontWeight: 700 }}>intensity of the colour </Text>
+              shows how much that exercise trains similar muscles as your
+              selected goal exercise.
             </Text>
           }
         />
-        <View
-          style={{
-            // flexDirection: "row",
-            marginBottom: 5,
-            backgroundColor: "rgba(176, 176, 176, 1)",
-            padding: 5,
-            borderBottomRightRadius: 4,
-            borderBottomLeftRadius: 4,
-            // marginHorizontal: 5,
-          }}
-        >
+        <View style={styles.goalSelectorContainer}>
           <Text
             style={{
-              padding: 10,
+              margin: 8,
+              padding: 3,
               fontSize: 18,
               color: "black",
               fontWeight: "700",
+              borderBottomWidth: 1,
+              // backgroundColor: "lightgrey",
+              borderBottomColor: "lightgrey",
               // textAlign: "center",
             }}
           >
@@ -234,7 +244,14 @@ const GoalSpecificScreen = () => {
 };
 
 styles = StyleSheet.create({
-  // goalButtonContainer: { alignItems: "center" },
+  goalSelectorContainer: {
+    // flexDirection: "row",
+    marginBottom: 5,
+    backgroundColor: "rgba(176, 176, 176, 1)",
+    padding: 5,
+    borderBottomRightRadius: 4,
+    borderBottomLeftRadius: 4,
+  },
 });
 
 export default GoalSpecificScreen;

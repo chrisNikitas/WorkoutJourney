@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SearchBar } from "@rneui/themed";
+import CancelButton from "./CancelButton";
 
 const IconSelectionModal = ({
+  navigation,
   isVisible,
   onSelectIcon,
   onClose,
@@ -39,8 +41,9 @@ const IconSelectionModal = ({
   const [selectedIcon, setSelectedIcon] = useState("");
 
   const handleIconSelect = (iconName) => {
-    selectIcon(iconName);
-    onClose();
+    // selectIcon(iconName);
+    navigation.navigate("NewFactorModal", iconName);
+    // onClose();
   };
 
   function searchIcon(s) {
@@ -60,7 +63,7 @@ const IconSelectionModal = ({
       >
         <Ionicons
           name={itemData.item}
-          size={30}
+          size={60}
           // style={styles.icon}
           // color={selectedIcon === iconName ? "blue" : "black"}
         />
@@ -73,30 +76,35 @@ const IconSelectionModal = ({
     onClose();
   };
   return (
-    <Modal visible={isVisible}>
-      <SearchBar
-        inputContainerStyle={{ backgroundColor: "lightgray" }}
-        lightTheme={true}
-        style={{ textAlign: "center" }}
-        placeholder="Search for icons"
-        value={iconSearch}
-        onChangeText={searchIcon}
-      />
-      <View style={styles.appContainer}>
-        <Button title="cancel" onPress={onClose}></Button>
-        <Text>Select an icon:</Text>
-        <View style={styles.iconsDrawer}>
-          <FlatList
-            numColumns={5}
-            data={displayedIcons}
-            renderItem={renderIcon}
-          ></FlatList>
-        </View>
-        <TouchableOpacity onPress={handleConfirm}>
-          <Text>Confirm</Text>
-        </TouchableOpacity>
+    <View style={styles.appContainer}>
+      <Text
+        style={{
+          fontSize: 22,
+          fontWeight: "500",
+          padding: 8,
+          textAlignVertical: "center",
+          textAlign: "center",
+          flex: 1,
+        }}
+      >
+        Select an icon:
+      </Text>
+      <View style={styles.iconsDrawer}>
+        <FlatList
+          numColumns={5}
+          data={icons}
+          renderItem={renderIcon}
+        ></FlatList>
       </View>
-    </Modal>
+      <View style={{ marginBottom: 30 }}>
+        <CancelButton
+          title="cancel"
+          callback={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
+    </View>
   );
 };
 
@@ -105,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconsDrawer: {
-    flex: 1,
+    flex: 4,
     flexDirection: "row",
     // flexWrap: "wrap",
     height: "100%",

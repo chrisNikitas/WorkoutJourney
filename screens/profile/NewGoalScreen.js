@@ -21,8 +21,6 @@ const NewGoalScreen = ({ navigation, route }) => {
   const [goalReps, setGoalReps] = useState("");
   const [goalSets, setGoalSets] = useState("");
   const [goalWeight, setGoalWeight] = useState("");
-  const [exerciseScreenModalIsVisible, setExerciseScreenModalIsVisible] =
-    useState(false);
 
   const goalDataContext = useContext(GoalDataContext);
   useEffect(() => {

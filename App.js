@@ -25,6 +25,7 @@ import NewWorkoutScreen from "./screens/workout/NewWorkoutScreen";
 
 import FactorModal from "./components/workout/FactorModal";
 import NewFactorModal from "./components/workout/NewFactorModal";
+import IconSelectionModal from "./components/global/IconsModal";
 
 import AllWorkoutsDataProvider from "./store/AllWorkoutsData";
 import WorkoutDataProvider from "./store/WorkoutData.js";
@@ -34,9 +35,6 @@ import ExitSurvey from "./components/surveys/ExitSurvey";
 import EntrySurvey from "./components/surveys/EntrySurvey";
 import messaging from "@react-native-firebase/messaging";
 import { Alert } from "react-native";
-
-import * as Notifications from "expo-notifications";
-// import * as NotificationHandler from "./NotificationHandler";
 
 import init from "./appInit";
 
@@ -52,7 +50,11 @@ init();
 
 const getTabBarVisibility = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route);
-  const hideOnScreens = ["NewGoalScreen"]; // put here name of screen where you want to hide tabBar
+  const hideOnScreens = [
+    "NewGoalScreen",
+    "NewFactorModal",
+    "IconSelectionModal",
+  ]; // put here name of screen where you want to hide tabBar
   return hideOnScreens.indexOf(routeName) <= -1;
 };
 
@@ -98,6 +100,14 @@ function WorkoutScreenStack() {
             }}
             name="NewFactorModal"
             component={NewFactorModal}
+          />
+          <WorkoutScreenStackNav.Screen
+            options={{
+              headerTitle: "Select an Icon",
+              animation: "slide_from_bottom",
+            }}
+            name="IconSelectionModal"
+            component={IconSelectionModal}
           />
         </WorkoutScreenStackNav.Group>
         <WorkoutScreenStackNav.Screen
@@ -207,7 +217,10 @@ function MainContentTab() {
 export default function App() {
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+      Alert.alert(
+        remoteMessage.notification.title,
+        remoteMessage.notification.body
+      );
     });
 
     return unsubscribe;

@@ -23,21 +23,25 @@ const SelectExerciseScreen = ({
 }) => {
   const [search, setSearch] = useState("");
   const [exerciseList, setExerciseList] = useState(allExerciseList);
+  const [allRecentExerciseList, setAllRecentExerciseList] = useState([]);
   const [recentExerciseList, setRecentExerciseList] = useState([]);
   useEffect(() => {
     LocalStore.getData("recentExerciseList").then((l) => {
-      if (l) setRecentExerciseList(l);
-      else setRecentExerciseList([]);
+      if (l) {
+        setAllRecentExerciseList(l);
+        setRecentExerciseList(l);
+      } else {
+        setAllRecentExerciseList([]);
+        setRecentExerciseList([]);
+      }
     });
   }, []);
 
   const addToRecent = (exercise) => {
     if (
-      recentExerciseList.filter((re) => re.name == exercise.name).length == 0
+      allRecentExerciseList.filter((re) => re.name == exercise.name).length == 0
     ) {
-      console.log(recentExerciseList);
-      let newRecentExerciseList = [exercise, ...recentExerciseList];
-      console.log(newRecentExerciseList.length);
+      let newRecentExerciseList = [exercise, ...allRecentExerciseList];
       if (newRecentExerciseList.length > 10) newRecentExerciseList.pop();
 
       LocalStore.storeData("recentExerciseList", newRecentExerciseList);
@@ -61,10 +65,14 @@ const SelectExerciseScreen = ({
   function searchExercises(s) {
     setSearch(s);
     exercises = ["pullups", "pushups"];
-    let res = allExerciseList.filter((ex) =>
+    let exL = allExerciseList.filter((ex) =>
       ex.name.toLowerCase().includes(s.toLowerCase())
     );
-    setExerciseList(res);
+    setExerciseList(exL);
+    let rExL = allRecentExerciseList.filter((ex) =>
+      ex.name.toLowerCase().includes(s.toLowerCase())
+    );
+    setRecentExerciseList(rExL);
   }
 
   let sectionedData = [
@@ -74,7 +82,7 @@ const SelectExerciseScreen = ({
     },
     {
       title: "All",
-      data: allExerciseList,
+      data: exerciseList,
     },
   ];
 
@@ -90,15 +98,6 @@ const SelectExerciseScreen = ({
         onChangeText={searchExercises}
       />
       <MyButton title="Cancel" onPress={navigation.goBack}></MyButton>
-      {/* <Button
-        title="Clear Recent"
-        onPress={() => LocalStore.removeData("recentExerciseList")}
-      ></Button> */}
-
-      {/* <FlatList
-        data={recentExerciseList.concat(exerciseList)}
-        renderItem={renderExerciseItem}
-      ></FlatList> */}
 
       <SectionList
         sections={sectionedData}

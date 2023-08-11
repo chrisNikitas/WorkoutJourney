@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as LocalStore from "./store/LocalStore";
 import uuid from "react-native-uuid";
@@ -15,23 +16,30 @@ const init = async () => {
     checkEntryQuestionnaire();
     initInitialFactors();
     registerForPushNotificationsAsync();
-
     // LocalStore.clearAll();
   } catch (e) {
     // handle error
     console.log(e);
   }
 };
-
-// Requesting permission to show notifications
-// async function requestPermissions() {
-//   const { status } = await Notifications.requestPermissionsAsync();
-// }
+async function scheduleNotificationForExitQ() {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "2 Weeks Done!",
+      body: "Click to complete the final questionnaire",
+    },
+    trigger: {
+      seconds: 1209600,
+    },
+  });
+}
 
 const checkEntryQuestionnaire = () => {
   LocalStore.getData("entryQuestionnaireDone").then((b) => {
     if (b) return;
-    else RootNavigation.navigate("SurveyContent", { screen: "EntrySurvey" });
+    else {
+      RootNavigation.navigate("SurveyContent", { screen: "EntrySurvey" });
+    }
   });
 };
 
@@ -41,7 +49,6 @@ const checkExitQuestionnaire = () => {
     if (!v) {
       var endDate = new Date(Date.now() + 12096e5); //2 weeks
       // var endDate = new Date(Date.now() + 60000); // 1 minute
-
       LocalStore.storeData("endDate", JSON.stringify(endDate));
       return;
     }
@@ -50,9 +57,24 @@ const checkExitQuestionnaire = () => {
     if (Date.now() > new Date(v).getTime()) {
       LocalStore.getData("exitQuestionnaireDone").then(
         (exitQuestionnaireDone) => {
+          console.log(exitQuestionnaireDone);
           if (exitQuestionnaireDone) return;
-          else
+          else {
+            Alert.alert(
+              "Almost There!",
+              "Thank you for completing two weeks of this study. This last step is a questionnaire about your experience with the application.",
+              [
+                {
+                  text: "Ok",
+                  style: "cancel",
+                },
+              ],
+              {
+                cancelable: true,
+              }
+            );
             RootNavigation.navigate("SurveyContent", { screen: "ExitSurvey" });
+          }
         }
       );
       console.log("Study Ended");
@@ -68,10 +90,6 @@ async function registerForPushNotificationsAsync() {
   status = await Notifications.getPermissionsAsync();
   if (status.status !== "granted") {
     status = await Notifications.requestPermissionsAsync();
-    if (status.status !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
   }
 
   Notifications.setNotificationHandler({
@@ -105,6 +123,7 @@ const initAppUUID = async () => {
       newId = uuid.v1();
       global.appID = newId;
       LocalStore.storeData("appID", newId);
+      scheduleNotificationForExitQ();
     } else {
       global.appID = id;
     }

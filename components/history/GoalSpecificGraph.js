@@ -6,8 +6,9 @@ import {
   VictoryPie,
   VictoryLabel,
   VictoryLegend,
+  VictoryGroup,
 } from "victory-native";
-
+import { Svg } from "react-native-svg";
 import { GoalDataContext } from "../../store/GoalData";
 import { View, ScrollView, Text, StyleSheet, Pressable } from "react-native";
 import { useState, useEffect, useContext } from "react";
@@ -24,7 +25,7 @@ const GoalSpecificGraph = ({
   onBarPressProp,
 }) => {
   const [selectedBar, setSelectedBar] = useState(-1);
-  const [barWidth, setBarWidth] = useState(20);
+  const [barWidth, setBarWidth] = useState(25);
   const [helpView, setHelpView] = useState(false);
 
   const goalDataContext = useContext(GoalDataContext);
@@ -47,6 +48,12 @@ const GoalSpecificGraph = ({
     if (pieChartDataProp.length == 0) {
       return;
     }
+    let legend = pieChartDataProp.map((ex) => {
+      return {
+        name: "" + ex.x + " :" + ex.exNames + "",
+        symbol: { fill: "none" },
+      };
+    });
     return (
       <>
         <Text style={styles.explanatoryText}>
@@ -54,54 +61,44 @@ const GoalSpecificGraph = ({
           has on your selected goal
         </Text>
 
-        <VictoryPie
-          data={pieChartDataProp}
-          labelRadius={({ innerRadius }) => 20}
-          // radius={({ datum }) => 50 + (datum.y * 1) / 7}
-          // labelPosition={({ index }) => "centroid"}
-          // labelPlacement={({ index }) => "perpendicular"}
-          labels={({ datum }) => datum.x.split(" ")} // split each label by spaces
-          padAngle={({ datum }) => 3}
-          innerRadius={80}
-          style={{
-            data: {
-              // fill: ({ index }) => "black",
+        <View>
+          <VictoryPie
+            // x={0}
+            // y={140}
+            data={pieChartDataProp}
+            // labelRadius={({ innerRadius }) => 20}
+            // radius={({ datum }) => 50 + (datum.y * 1) / 7}
+            // labelPosition={({ index }) => "centroid"}
+            // labelPlacement={({ index }) => "perpendicular"}
+            // labels} // split each label by spaces
+            padAngle={({ datum }) => 3}
+            innerRadius={80}
+            style={{
+              data: {
+                // fill: ({ index }) => "black",
 
-              fill: ({ index }) => {
-                let a = pieChartDataProp[index]["colorIntensity"] + 0.1;
-                return "rgba(255, 99, 71," + a + " )";
+                fill: ({ index }) => {
+                  let a = pieChartDataProp[index]["colorIntensity"] + 0.1;
+                  return "rgba(255, 99, 71," + a + " )";
+                },
               },
-            },
-          }}
-        />
+            }}
+          />
+          <VictoryLegend data={legend} />
+        </View>
       </>
     );
   };
 
   return (
     <>
-      <ScrollView style={{}}>
-        <View
-          style={{
-            backgroundColor: "lightgrey",
-            borderRadius: 5,
-            marginHorizontal: 5,
-            marginTop: 5,
-          }}
-        >
+      <ScrollView>
+        <View style={styles.graphContainer}>
           <VictoryChart
+            height={310}
             domainPadding={{ x: [20, 20] }}
-            padding={{ bottom: 80, top: 40, left: 59, right: 30 }}
-            containerComponent={
-              <VictoryZoomContainer
-                //  onZoomDomainChange={({ x, y }) => {
-                //     let xDiff = x[1] - x[0];
-                //     // setBarWidth(100 / xDiff);
-                //   }}
-                zoomDimension="x"
-                // minimumZoom={{ x: 2 }}
-              />
-            }
+            padding={{ bottom: 70, top: 40, left: 59, right: 30 }}
+            containerComponent={<VictoryZoomContainer zoomDimension="x" />}
           >
             <VictoryAxis
               label={"Date (Past to Present)"}
@@ -131,7 +128,7 @@ const GoalSpecificGraph = ({
                   padding: 53,
                   fontWeight: 500,
                   angle: 0,
-                  dy: -95,
+                  dy: -115,
                   dx: 33,
                 },
               }}
@@ -142,7 +139,7 @@ const GoalSpecificGraph = ({
               style={{
                 data: {
                   fill: ({ index }) =>
-                    index === selectedBar ? "#c43b31af" : "grey",
+                    index === selectedBar ? "#ff634792" : "grey",
                 },
               }}
               events={[
@@ -168,7 +165,7 @@ const GoalSpecificGraph = ({
                 style={{
                   data: {
                     fill: ({ index }) =>
-                      index === selectedBar ? "#c43b3188" : "black",
+                      index === selectedBar ? "#ff6347b9" : "black",
                   },
                 }}
                 events={[
@@ -184,7 +181,7 @@ const GoalSpecificGraph = ({
             )}
             <VictoryLegend
               x={60}
-              y={265}
+              y={285}
               // title="Legend"
               centerTitle
               orientation="horizontal"
@@ -207,14 +204,7 @@ const GoalSpecificGraph = ({
             view a breakdown
           </Text>
         </View>
-        <View
-          style={{
-            backgroundColor: "lightgrey",
-            borderRadius: 5,
-            marginHorizontal: 5,
-            marginTop: 5,
-          }}
-        >
+        <View style={styles.graphContainer}>
           <GoalSpecificPieChart></GoalSpecificPieChart>
         </View>
       </ScrollView>
@@ -235,6 +225,12 @@ const styles = StyleSheet.create({
     // letterSpacing: 0.1,
     // lineHeight: 15,
     fontSize: 16,
+  },
+  graphContainer: {
+    backgroundColor: "rgba(226, 226, 226, 1)",
+    borderRadius: 5,
+    marginHorizontal: 5,
+    marginTop: 5,
   },
 });
 export default GoalSpecificGraph;

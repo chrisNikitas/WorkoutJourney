@@ -7,13 +7,13 @@ export const storeData = async (key, value) => {
   try {
     const rootDatabasePath = "/" + global.appID + "/";
     const jsonValue = JSON.stringify(value);
+    console.log("Storing ", jsonValue);
     await AsyncStorage.setItem(key, jsonValue);
     firebase
       .app()
       .database(databaseURL)
       .ref(rootDatabasePath + key)
       .set(value);
-    console.log("Storing");
   } catch (e) {
     // saving error
     console.log("Error saving");

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import MyButton from "../global/MyButton";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -17,7 +17,13 @@ import DropDownPicker from "react-native-dropdown-picker";
 import CancelButton from "../global/CancelButton";
 import IconSelectionModal from "../global/IconsModal";
 
-const NewFactorModal = ({ isVisible, setIsVisible, addNewFactorProp }) => {
+const NewFactorModal = ({
+  navigation,
+  route,
+  isVisible,
+  setIsVisible,
+  addNewFactorProp,
+}) => {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [type, setType] = useState(null);
@@ -30,12 +36,17 @@ const NewFactorModal = ({ isVisible, setIsVisible, addNewFactorProp }) => {
     { label: "Slider", value: "1-5" },
   ]);
 
+  useEffect(() => {
+    if (route.params) selectIcon(route.params);
+  }, [route.params]);
+
   const closeModal = () => {
-    setIsVisible(false);
+    navigation.goBack();
   };
 
   const toggleIcons = () => {
-    setIconModalIsVisible(!iconModalIsVisible);
+    // setIconModalIsVisible(!iconModalIsVisible);
+    navigation.navigate("IconSelectionModal");
   };
 
   const selectIcon = (iconName) => {
@@ -44,95 +55,87 @@ const NewFactorModal = ({ isVisible, setIsVisible, addNewFactorProp }) => {
 
   const addNewFactor = () => {
     const newFactor = { name: name, type: type, desc: desc, icon: icon };
-    addNewFactorProp(newFactor);
-    closeModal();
+    7;
+    navigation.navigate("Factors", {
+      previousScreen: "NewFactorModal",
+      newFactor: newFactor,
+    });
   };
   //   txt = icon === "help" ? "Add Icon" : "";
   return (
     <>
-      <Modal
-        style={styles.modalContainer}
-        animationType="slide"
-        visible={isVisible}
-      >
-        <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
-          <View
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <View style={styles.mainContent}>
-              <Text>{icon === "help" ? "Add Icon" : ""}</Text>
-              <Pressable
-                onPress={toggleIcons}
-                style={{
-                  backgroundColor: icon == "help" ? "lightgrey" : "white",
-                  borderRadius: 5,
-                }}
-              >
-                <Ionicons name={icon} size={100} />
-              </Pressable>
-            </View>
-            <View style={styles.textContainer}>
-              <TextInput
-                style={[
-                  styles.factorName,
-                  name == "" ? styles.input_empty : styles.input_filled,
-                ]}
-                onChangeText={setName}
-                value={name}
-                placeholder="Name"
-                keyboardType="default"
-              />
-              <TextInput
-                style={[
-                  styles.factorDesc,
-                  desc == "" ? styles.input_empty : styles.input_filled,
-                ]}
-                multiline={true}
-                onChangeText={setDesc}
-                value={desc}
-                placeholder="Description (Optional)"
-                keyboardType="default"
-              />
-              <DropDownPicker
-                placeholder="Select a factor type"
-                showArrowIcon={false}
-                containerStyle={styles.factorTypeContainer}
-                dropDownContainerStyle={
-                  type == null ? styles.input_empty : styles.input_filled
-                }
-                // zIndex={1}
-                style={type == null ? styles.input_empty : styles.input_filled}
-                textStyle={{ textAlign: "center" }}
-                open={open}
-                value={type}
-                items={types}
-                setOpen={setOpen}
-                setValue={setType}
-                setItems={setTypes}
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-              <MyButton
-                disabled={
-                  name != "" && type != null && icon != "help" ? false : true
-                }
-                title="Add"
-                onPress={addNewFactor}
-              />
-              <CancelButton callback={closeModal} />
-            </View>
+      <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <View style={styles.mainContent}>
+            <Text>{icon === "help" ? "Add Icon" : ""}</Text>
+            <Pressable
+              onPress={toggleIcons}
+              style={{
+                backgroundColor: icon == "help" ? "lightgrey" : "white",
+                borderRadius: 5,
+              }}
+            >
+              <Ionicons name={icon} size={100} />
+            </Pressable>
           </View>
-        </KeyboardAvoidingView>
-      </Modal>
-      <IconSelectionModal
-        onClose={toggleIcons}
-        isVisible={iconModalIsVisible}
-        selectIcon={selectIcon}
-      />
+          <View style={styles.textContainer}>
+            <TextInput
+              style={[
+                styles.factorName,
+                name == "" ? styles.input_empty : styles.input_filled,
+              ]}
+              onChangeText={setName}
+              value={name}
+              placeholder="Name"
+              keyboardType="default"
+            />
+            <TextInput
+              style={[
+                styles.factorDesc,
+                desc == "" ? styles.input_empty : styles.input_filled,
+              ]}
+              multiline={true}
+              onChangeText={setDesc}
+              value={desc}
+              placeholder="Description (Optional)"
+              keyboardType="default"
+            />
+            <DropDownPicker
+              placeholder="Select a factor type"
+              showArrowIcon={false}
+              containerStyle={styles.factorTypeContainer}
+              dropDownContainerStyle={
+                type == null ? styles.input_empty : styles.input_filled
+              }
+              // zIndex={1}
+              style={type == null ? styles.input_empty : styles.input_filled}
+              textStyle={{ textAlign: "center" }}
+              open={open}
+              value={type}
+              items={types}
+              setOpen={setOpen}
+              setValue={setType}
+              setItems={setTypes}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <MyButton
+              disabled={
+                name != "" && type != null && icon != "help" ? false : true
+              }
+              title="Add"
+              onPress={addNewFactor}
+            />
+            <CancelButton callback={closeModal} />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </>
   );
 };

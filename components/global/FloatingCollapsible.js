@@ -1,5 +1,11 @@
 import Collapsible from "react-native-collapsible";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { useState } from "react";
 const FloatingCollapsible = ({
   title,
@@ -25,33 +31,53 @@ const FloatingCollapsible = ({
     ...floatingButtonStyle,
   };
   return (
-    <View style={finalFloatingButtonStyle}>
-      <Pressable
-        android_ripple={{ color: "lightgrey" }}
-        style={{
-          padding: 5,
-        }}
-        onPress={() => setVisible(!visible)}
-      >
-        <View>
-          <Text style={styles.titleText}>{title}</Text>
-        </View>
-      </Pressable>
-      <Collapsible
-        collapsed={!visible}
-        style={{
-          position: "absolute",
-          padding: 8,
-        }}
-      >
-        <Text style={styles.expandedViewText}>{expandedViewContent}</Text>
-      </Collapsible>
-    </View>
+    <>
+      {visible && (
+        <TouchableWithoutFeedback onPress={() => setVisible(!visible)}>
+          <View style={styles.overlay} />
+        </TouchableWithoutFeedback>
+      )}
+      <View style={finalFloatingButtonStyle}>
+        <Pressable
+          android_ripple={{ color: "lightgrey" }}
+          style={{
+            padding: 5,
+          }}
+          onPress={() => setVisible(!visible)}
+        >
+          <View>
+            <Text style={styles.titleText}>{title}</Text>
+          </View>
+        </Pressable>
+        <Collapsible
+          collapsed={!visible}
+          style={{
+            position: "absolute",
+            padding: 8,
+          }}
+        >
+          <Text style={styles.expandedViewText}>{expandedViewContent}</Text>
+        </Collapsible>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    // position: "absolute",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  overlay: {
+    position: "absolute",
+    zIndex: 1,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "transparent",
+  },
   expandedViewText: {
+    lineHeight: 25,
     fontSize: 16,
   },
   titleText: {

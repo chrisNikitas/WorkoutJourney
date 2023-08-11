@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import MyButton from "../../components/global/MyButton.js";
 import { AllWorkoutsDataContext } from "../../store/AllWorkoutsData.js";
@@ -6,18 +6,27 @@ import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import globalStyle from "../../components/global/globalStyle.js";
 
 export default function WorkoutScreen({ navigation }) {
-  const [workoutsLogged, setWorkoutsLogged] = useState(0);
-
+  const [workoutsLogged, setWorkoutsLogged] = useState();
   const workoutDataContext = useContext(WorkoutDataContext);
   const allWorkoutDataContext = useContext(AllWorkoutsDataContext);
 
+  const firstTime = useRef(true);
+
   useEffect(() => {
-    // setTimeout(() => {
-    allWorkoutDataContext.getAllWorkouts().then((v) => {
-      if (v) setWorkoutsLogged(v.length);
-      else setWorkoutsLogged(0);
-    });
-    // }, 1000);
+    if (allWorkoutDataContext.allWorkoutsRetrieved.current)
+      setTimeout(() => {
+        allWorkoutDataContext.getAllWorkouts().then((v) => {
+          if (v) setWorkoutsLogged(v.length);
+          else setWorkoutsLogged(0);
+        });
+      }, 550);
+    else if (!allWorkoutDataContext.allWorkoutsRetrieved.current) {
+      allWorkoutDataContext.getAllWorkouts().then((v) => {
+        if (v) setWorkoutsLogged(v.length);
+        else setWorkoutsLogged(0);
+        firstTime.current = false;
+      });
+    }
   }, [allWorkoutDataContext.allWorkouts]);
 
   function onStartWorkout() {

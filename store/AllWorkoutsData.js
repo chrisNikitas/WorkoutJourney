@@ -131,6 +131,7 @@ export default function AllWorkoutsDataProvider({ children }) {
 
     removeWorkout: removeWorkout,
     removeAllData: removeAllData,
+    allWorkoutsRetrieved: allWorkoutsRetrieved,
   };
 
   return (

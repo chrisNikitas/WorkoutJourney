@@ -10,10 +10,6 @@ import {
   Alert,
 } from "react-native";
 import FloatingCollapsible from "../../components/global/FloatingCollapsible";
-import IconSelectionModal from "../../components/global/IconsModal";
-import FactorModal from "../../components/workout/FactorModal";
-import NewFactorModal from "../../components/workout/NewFactorModal";
-// import allFactors from "../../data/FactorsList.json";
 import { WorkoutDataContext } from "../../store/WorkoutData.js";
 import MyButton from "../../components/global/MyButton";
 import * as LocalStore from "../../store/LocalStore";
@@ -29,18 +25,22 @@ const FactorsScreen = ({ navigation, route }) => {
 
   const workoutDataContext = useContext(WorkoutDataContext);
 
-  const [newFactorModalIsVisible, setNewFactorModalIsVisible] = useState(false);
-  const [iconModalIsVisible, setIconModalIsVisible] = useState(false);
-
   useEffect(() => {
     LocalStore.getData("factors").then((f) => {
       setAllFactors(f);
     });
+    setFactorData(workoutDataContext.getWorkoutFactors());
   }, []);
 
   useEffect(() => {
+    // This is a bad way to add data/ create new factors.
+    // Would be better if the WorkoutData store handled the data,
+    // so respective screens wouldnt need to pass data here
     if (route.params) {
-      addFactorData(route.params.factorVal);
+      if (route.params.previousScreen == "FactorModal")
+        addFactorData(route.params.factorVal);
+      else if (route.params.previousScreen == "NewFactorModal")
+        addNewFactor(route.params.newFactor);
     }
   }, [route.params]);
 
@@ -180,11 +180,7 @@ const FactorsScreen = ({ navigation, route }) => {
   };
 
   const toggleNewFactorModal = () => {
-    setNewFactorModalIsVisible(!newFactorModalIsVisible);
-  };
-
-  const toggleIcons = () => {
-    setIconModalIsVisible(!iconModalIsVisible);
+    navigation.navigate("NewFactorModal");
   };
 
   return (
@@ -240,21 +236,6 @@ const FactorsScreen = ({ navigation, route }) => {
           </View>
         </View>
       </View>
-      {/* <FactorModal
-        isVisible={factorModalIsVisible}
-        setIsVisible={setFactorModalIsVisible}
-        selectedFactor={selectedFactor}
-        addFactorData={addFactorData}
-      /> */}
-      <NewFactorModal
-        isVisible={newFactorModalIsVisible}
-        setIsVisible={setNewFactorModalIsVisible}
-        addNewFactorProp={addNewFactor}
-      />
-      <IconSelectionModal
-        onClose={toggleIcons}
-        isVisible={iconModalIsVisible}
-      />
     </View>
   );
 };

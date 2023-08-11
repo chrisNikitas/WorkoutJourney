@@ -72,6 +72,7 @@ const FactorModal = ({
 
   const addFactorData = (fv) => {
     navigation.navigate("Factors", {
+      previousScreen: "FactorModal",
       selectedFactor: selectedFactor,
       factorVal: fv,
     });

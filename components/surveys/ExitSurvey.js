@@ -1,6 +1,7 @@
 import {
   View,
   KeyboardAvoidingView,
+  Alert,
   ScrollView,
   StyleSheet,
 } from "react-native";
@@ -78,11 +79,24 @@ const ExitSurvey = ({ navigation }) => {
       q7: q7,
       q8: q8,
       q9: q9,
+      sus: sus,
     };
     LocalStore.storeData("exitQuestionnaire", answers);
     LocalStore.storeData("exitQuestionnaireDone", true);
 
-    console.log("Sent!");
+    Alert.alert(
+      "Finished!",
+      "You are now finished with this user study! Thank you, and congrats. Feel free to stop using the app or continue using it. Keep in mind that if you continue using it, the application might stop working at some point.",
+      [
+        {
+          text: "Ok",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
     RootNavigation.navigate("MainContent");
   };
 
@@ -405,10 +419,7 @@ const ExitSurvey = ({ navigation }) => {
             }}
           />
 
-          <Text style={styles.question}>
-            I needed to learn a lot of things before I could get going with this
-            system.
-          </Text>
+          <Text style={styles.question}></Text>
           <Text style={styles.sliderVal}>{sus[9]}</Text>
           <Slider
             value={sus[9]}

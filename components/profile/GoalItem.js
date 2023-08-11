@@ -37,7 +37,13 @@ const GoalItem = ({ goal, removeGoal }) => {
         <View style={styles.container}>
           <View style={styles.name_cont}>
             {/* <Text></Text> */}
-            <Text style={styles.name_text}>{goal.exercise.name}</Text>
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={3}
+              style={styles.name_text}
+            >
+              {goal.exercise.name}
+            </Text>
           </View>
           <View
             adjustsFontSizeToFit={true}
@@ -82,11 +88,12 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingVertical: 20,
     flexDirection: "row",
+
     // height: 50,
     alignItems: "center",
   },
-  name_cont: { flex: 5 },
-  name_text: { fontSize: 25, fontWeight: 500 },
+  name_cont: { flex: 5, paddingRight: 5 },
+  name_text: { fontSize: 20, fontWeight: "500" },
   sets_reps_cont: { flex: 3 },
   sets_reps_titles: { fontSize: 20, fontWeight: 500 },
   sets_reps_cont: { flex: 3 },
