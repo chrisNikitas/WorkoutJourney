@@ -1,0 +1,7 @@
+![goal_specific_screen](https://github.com/user-attachments/assets/82a96539-28dd-4402-8124-ef1ae835e24a)
+![workout_counter](https://github.com/user-attachments/assets/1f62ddac-d616-43e8-9b7e-30de42fdb6ae)
+![history_screen](https://github.com/user-attachments/assets/94d0c9d7-ad8b-4b4f-9932-1a8c6f223891)
+![goal_specific_screen](https://github.com/user-attachments/assets/fc8b4591-ef5b-4937-a840-10b9b069f34b)
+![goal_screen](https://github.com/user-attachments/assets/125f3002-25e6-47eb-b009-c3ad9ab460cb)
+![add_factor_screen](https://github.com/user-attachments/assets/e2f337d7-1e8c-44d8-8240-fe6e2c661c4e)
+![big_goal_specific_screen](https://github.com/user-attachments/assets/2d4bb1c2-9754-4352-9e85-1b34dc6b66ee)
